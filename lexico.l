@@ -10,7 +10,7 @@ ESPACIO     [" "]
 GUION       [-_]
 
 %%
-int main () {
+main () {
     yylex();
     return 0;
 }
