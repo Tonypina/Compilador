@@ -2,15 +2,50 @@
     // Código en C
     #include <stdio.h>
     #include <string.h>
-}%
+    FILE *archEnt;
 
-// Atómicos
+    typedef struct Tupla {
+        char* str;
+        char atom;
+    };
+
+    typedef struct Token {
+        int class;
+        char val;
+    }
+
+    Tupla palabrasReservadas[] = {
+        {"alternative", 'a'},
+        {"big", 'b'}
+        {"evaluate", 'c'}
+        {"instead", 'd'}
+        {"large", 'e'}
+        {"loop", 'f'}
+        {"make", 'g'}
+        {"number", 'h'}
+        {"other", 'i'}
+        {"real", 'j'}
+        {"repeat", 'k'}
+        {"select", 'l'}
+        {"small", 'm'}
+        {"step", 'n'}
+        {"stop", 'o'}
+        {"symbol", 'p'}
+        {"throw", 'q'}
+
+%%
+    }
+%}
+
+
+/* Estructura para definir palabras reservadas {palabra,valor,atomo} */
 DIGITO      [0-9]
 LETRA       [a-zA-Z]
 ESPACIO     [" "]
 GUION       [-_]
 
-// Palabras reservadas
+/* Palabras reservadas */
+
 ALTERNATIVE "alternative"
 BIG         "big"
 EVALUATE    "evaluate"
@@ -27,19 +62,44 @@ SMALL       "small"
 STEP        "step"
 STOP        "stop"
 SYMBOL      "symbol"
-THROW       "return"
+THROW       "throw"
+
+
+{ALTERNATIVE}   {tokenPalabraReservada(yytext);}
+{BIG}           {tokenPalabraReservada(yytext);}
+{EVALUATE}      {tokenPalabraReservada(yytext);}
+{INSTEAD}       {tokenPalabraReservada(yytext);}
+{LARGE}         {tokenPalabraReservada(yytext);}
+{LOOP}          {tokenPalabraReservada(yytext);}
+{MAKE}          {tokenPalabraReservada(yytext);}
+{NUMBER}        {tokenPalabraReservada(yytext);}
+{OTHER}         {tokenPalabraReservada(yytext);}
+{REAL}          {tokenPalabraReservada(yytext);}
+{REPEAT}        {tokenPalabraReservada(yytext);}
+{SELECT}        {tokenPalabraReservada(yytext);}
+{SMALL}         {tokenPalabraReservada(yytext);}
+{STEP}          {tokenPalabraReservada(yytext);}
+{STOP}          {tokenPalabraReservada(yytext);}
+{SYMBOL}        {tokenPalabraReservada(yytext);}
+{THROW}         {tokenPalabraReservada(yytext);}
 
 %%
 
+Token tokenPalabraReservada( char* palabra ) {
+    
+    for (int i = 0; i < (*(&palabrasReservadas + 1) - palabrasReservadas); i++) {
 
-
-%%
-typedef struct tupla {
-    int val;
-    char* str;
+        if ( !strcmp(palabra, palabrasReservadas[i].str) )
+            return {0, (char)i};
+    }
 }
 
-int main () {
+int main (int argc, char *argv[]) {
+    
+    yyin = fopen(argv[1],"r");
+    archSal = fopen("Entrada.txt","w");
     yylex();
+    fclose(archEnt);
+
     return 0;
 }
