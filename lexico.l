@@ -2,11 +2,13 @@
     // Código en C
     #include <stdio.h>
     #include <string.h>
+    #include <stdlib.h>
     
     FILE *archEnt;
 %}
 
 DIGITO      [0-9]
+ENTERO      {DIGITO}+
 LETRA       [a-zA-Z]
 ESPACIO     [" "]
 GUION       [-_]
