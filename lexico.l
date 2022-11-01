@@ -11,22 +11,22 @@ struct palabrasR{
   char atomo;
 }
 palReservada[17] = {{"ALTERNATIVE",0,'a'},
-                        {"BIG",1,'b'},
-                        {"EVALUATE",2,'c'},
-                        {"INSTEAD",3,'d'},
-                        {"LARGE",4,'e'},
-                        {"LOOP",5,'f'},
-                        {"MAKE",6,'g'},
-                        {"NUMBER",7,'h'},
-                        {"OTHER",8,'i'},
-                        {"REAL",9,'j'},
-                        {"REPEAT",10,'k'},
-                        {"SELECT",11,'l'},
-                        {"SMALL",12,'m'},
-                        {"STEP",13,'n'},
-                        {"STOP",14,'o'},
-                        {"SYMBOL",15,'p'},
-                        {"THROW",16,'q'}
+                    {"BIG",1,'b'},
+                    {"EVALUATE",2,'c'},
+                    {"INSTEAD",3,'d'},
+                    {"LARGE",4,'e'},
+                    {"LOOP",5,'f'},
+                    {"MAKE",6,'g'},
+                    {"NUMBER",7,'h'},
+                    {"OTHER",8,'i'},
+                    {"REAL",9,'j'},
+                    {"REPEAT",10,'k'},
+                    {"SELECT",11,'l'},
+                    {"SMALL",12,'m'},
+                    {"STEP",13,'n'},
+                    {"STOP",14,'o'},
+                    {"SYMBOL",15,'p'},
+                    {"THROW",16,'q'}
 };
 
 DIGITO      [0-9]
