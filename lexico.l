@@ -4,6 +4,8 @@
     #include <string.h>
 }%
 
+FILE *archEnt;
+
 //Estructura para definir palabras reservadas {palabra,valor,atomo}
 struct palabrasR{
   char palabra[10];
@@ -35,7 +37,9 @@ ESPACIO     [" "]
 GUION       [-_]
 
 %%
-main () {
+main (int argc, char *argv[]) {
+    yyin = fopen(argv[1],"r");
+    archSal = fopen("Entrada.txt","w");
     yylex();
-    return 0;
+    fclose(archEnt);
 }
