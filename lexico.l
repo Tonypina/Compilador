@@ -12,7 +12,7 @@
     typedef struct Token {
         int class;
         char val;
-    }
+    };
 
     Tupla palabrasReservadas[] = {
         {"alternative", 'a'},
@@ -32,17 +32,37 @@
         {"stop", 'o'}
         {"symbol", 'p'}
         {"throw", 'q'}
-
-%%
-    }
+    };
 %}
 
 
 /* Estructura para definir palabras reservadas {palabra,valor,atomo} */
 DIGITO      [0-9]
+ENTERO      {DIGITO}+
 LETRA       [a-zA-Z]
 ESPACIO     [" "]
 GUION       [-_]
+PALRES      ALTERNATIVE|BIG|EVALUATE|INSTEAD|LARGE|LOOP|MAKE|NUMBER|OTHER|REAL|REPEAT|SELECT|SMALL|STEP|STOP|SYMBOL|THROW
+
+//Clase 0
+
+//Clase 1
+IDENT       $[LETRA]+;
+
+//Clase 2
+ENTERO      
+
+//Clase 3
+
+//Clase 4
+
+//Clase 5
+
+//Clase 6
+
+//Clase 7
+
+//Clase 8
 
 /* Palabras reservadas */
 
@@ -64,6 +84,7 @@ STOP        "stop"
 SYMBOL      "symbol"
 THROW       "throw"
 
+%%
 
 {ALTERNATIVE}   {tokenPalabraReservada(yytext);}
 {BIG}           {tokenPalabraReservada(yytext);}
