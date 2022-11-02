@@ -60,7 +60,9 @@ REAL        (DECIMAL)+[.](DIGITO)+;
 
 /* Clase 4 */
 CARACTER    ([LETRA]|"!"|"""|"#"|"$"|"%"|"&"|"/"|"("|")"|"="|"?"|"¡"|"/"|"*"|"-"|"+"|"¬"|">"|"<"|"¿"|"¬"|"°"|"@");
-CADENAS     (("[CARACTER]+")|('[CARACTER]'));
+COMILLAS    (""");
+COMILLA     ("'");
+CADENAS     (([COMILLAS][CARACTER]+[COMILLAS]")|([COMILLA][CARACTER][COMILLA]));
 
 
 /* Clase 5 */
