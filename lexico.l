@@ -13,7 +13,9 @@
         int class;
         char val;
     };
-
+    
+    /* Clase 0 */
+    /* Estructura para definir palabras reservadas {palabra,valor,token} */
     Tupla palabrasReservadas[] = {
         {"alternative", 'a'},
         {"big", 'b'}
@@ -36,13 +38,10 @@
 %}
 
 
-/* Estructura para definir palabras reservadas {palabra,valor,atomo} */
 DIGITO      [0-9]
 LETRA       [a-zA-Z]
 ESPACIO     [" "]
 GUION       [-_]
-
-/* Clase 0 */
 
 /* Clase 1 */
 IDENT       $[LETRA]+;
