@@ -227,7 +227,7 @@ bool SLL_Search( SLL* this, char* key )
 	
 	if( !SLL_IsEmpty( this ) ){
 
-		for( Node* it = this->first; it->next != NULL; it = it->next ){
+		for( Node* it = this->first; it != NULL; it = it->next ){
 			if( !strcmp(key, it->name) ){
 				found = true;
 				this->cursor = it;

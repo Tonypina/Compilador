@@ -193,7 +193,9 @@ Token tokenPalabraReservada( char* palabra ) {
     }
 
     // No es palabra reservada
-    printf("No es una palabra reservada.\n");
+    fprintf(archSal, "ERR: \"%s\" No es una palabra reservada. Se espera $ antes. ", palabra);
+    aux.class = -1;
+    aux.val = -1;
     return aux;
 }
 
@@ -203,8 +205,9 @@ Token tokenIdentificadores( char* id ) {
 
     if (SLL_Search(TABLA_IDENTIFICADORES, id)) {
 
-        printf("Identificador Repetido.");
-
+        fprintf(archSal, "ERR: \"%s\" ya existe. ", id);
+        token_aux.class = -1;
+        token_aux.val = -1;
         return token_aux;
     }
 
@@ -270,18 +273,20 @@ Token tokenOperadoresAritmeticos( char* s ) {
 
 Token tokenOperadoresRelacionales( char* s ) {
 
-    Token aux;
+    Token token_aux;
 
     if (SLL_Search(TABLA_OPRELACIONALES, s)) {
-        aux.class = 7;
-        aux.val = TABLA_OPRELACIONALES->cursor->pos;
+        token_aux.class = 7;
+        token_aux.val = TABLA_OPRELACIONALES->cursor->pos;
 
-        return aux;
+        return token_aux;
     }
 
     // No es palabra reservada
-    printf("Error léxico.\n");
-    return aux;
+    fprintf(archSal, "ERR: \"%s\" no es un operador válido. ", s);
+    token_aux.class = -1;
+    token_aux.val = -1;
+    return token_aux;
 }
 
 Token tokenOperadorAsignacion( char* s ) {
