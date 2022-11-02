@@ -48,21 +48,27 @@ GUION       [-_]
 IDENT       $[LETRA]+;
 
 /* Clase 2 */
-DECIMAL     [1-9][0-9]*;
+DECIMAL     [1-9](DIGITO)*;
 OCTAL       (O-o)[0-7]*;
 ENTERO      (DECIMAL|OCTAL);
 
 /* Clase 3 */
+REAL        (DECIMAL)+[.](DIGITO)+
 
 /* Clase 4 */
 
+
 /* Clase 5 */
+
 
 /* Clase 6 */
 
+
 /* Clase 7 */
 
+
 /* Clase 8 */
+
 
 /* Palabras reservadas */
 
