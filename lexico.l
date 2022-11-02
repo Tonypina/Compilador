@@ -101,13 +101,13 @@ CADENAS     "[{LETRA}!"#$%&/|=?¡/*-+¬><¿¬°@]+"
 SIMESPECIAL    "["|"]"|"("|")"|"{"|"}"|","|":"|";"
 
 /* Clase 6 */
-OPARITMETICOS    ([+*/%\^-])
+OPARITMETICOS   "+"|"*"|"/"|"%"|"\"|"^"|"-"
 
 /* Clase 7 */
 OPRELACIONALES  "<"|">"|"<="|">="|"=="|"!="
 
 /* Clase 8 */
-OPASIGNACION    [=]
+OPASIGNACION    "="
 
 "{"[^}\n]*"}"     /* Excluye una linea de comentarios */
 [ \t\n]+          /* Excluye los espacios en blanco */
