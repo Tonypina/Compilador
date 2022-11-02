@@ -2,7 +2,7 @@
     // Código en C
     #include <stdio.h>
     #include <string.h>
-    FILE *archEnt;
+    FILE *yyin;
     FILE *archSal;
 
     typedef struct Tupla {
@@ -58,7 +58,7 @@ ESPACIO     [" "]
 GUION       [-_]
 
 /* Clase 1 */
-IDENT       $[LETRA]+;
+IDENT       $[LETRA]+
 
 /* Clase 2 */
 DECIMAL     [1-9](DIGITO)*;
@@ -87,6 +87,7 @@ OPASIGNACION    ("=");
 
 %%
 
+{IDENT}    fprintf(archSal, "Es un identificador: %s", yytext);
 {PALRES}   printf("%s", yytext);
 
 %%
@@ -96,9 +97,13 @@ int main (int argc, char *argv[]) {
     yyin = fopen(argv[1],"r");
     archSal = fopen("Salida.txt","w");
     yylex();
-    fclose(archEnt);
+    fclose(archSal);
 
     return 0;
+}
+
+Token crearToken( char* palabra, const int TIPO ) {
+
 }
 
 Token tokenPalabraReservada( char* palabra ) {
@@ -110,13 +115,13 @@ Token tokenPalabraReservada( char* palabra ) {
         if ( !strcmp(palabra, PALRESERVADAS[i].atom) ) {
             printf("Es una palabra reservada: %s", palabra);
             aux.class = 0;
-            aux.val = (char)i;
+            aux.atom = (char)i;
             return aux;
         }
     }
 
     // No es palabra reservada
     aux.class = -1;
-    aux.val = -1;
+    aux.atom = -1;
     return aux;
 }
