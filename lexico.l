@@ -7,12 +7,12 @@
 
     typedef struct Tupla {
         char* str;
-        char atom;
+        char val;
     } Tupla;
 
     typedef struct Token {
         int class;
-        char val;
+        char atom;
     } Token;
     
     /* Clase 0 */
