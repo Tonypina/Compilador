@@ -16,25 +16,25 @@
     } Token;
     
     /* Clase 0 */
-    /* Estructura para definir palabras reservadas {palabra,valor,token} */
+    /* Estructura para definir palabras reservadas {palabra,valor} */
     Tupla palabrasReservadas[] = {
-        {"alternative", 'a'},
-        {"big", 'b'},
-        {"evaluate", 'c'},
-        {"instead", 'd'},
-        {"large", 'e'},
-        {"loop", 'f'},
-        {"make", 'g'},
-        {"number", 'h'},
-        {"other", 'i'},
-        {"real", 'j'},
-        {"repeat", 'k'},
-        {"select", 'l'},
-        {"small", 'm'},
-        {"step", 'n'},
-        {"stop", 'o'},
-        {"symbol", 'p'},
-        {"throw", 'q'}
+        {"alternative", '0'},
+        {"big", '1'},
+        {"evaluate", '2'},
+        {"instead", '3'},
+        {"large", '4'},
+        {"loop", '5'},
+        {"make", '6'},
+        {"number", '7'},
+        {"other", '8'},
+        {"real", '9'},
+        {"repeat", '10'},
+        {"select", '11'},
+        {"small", '12'},
+        {"step", '13'},
+        {"stop", '14'},
+        {"symbol", '15'},
+        {"throw", '16'}
     };
 
     Token tokenPalabraReservada(char* palabra);
@@ -59,6 +59,8 @@ ENTERO      (DECIMAL|OCTAL);
 REAL        (DECIMAL)+[.](DIGITO)+;
 
 /* Clase 4 */
+CARACTER    ([LETRA]|"!"|"""|"#"|"$"|"%"|"&"|"/"|"("|")"|"="|"?"|"¡"|"/"|"*"|"-"|"+"|"¬"|">"|"<"|"¿"|"¬"|"°"|"@");
+CADENAS     (("[CARACTER]+")|('[CARACTER]'));
 
 
 /* Clase 5 */
@@ -69,10 +71,18 @@ OPARIMETICOS    ("+"|"-"|"*"|"/"|"%"|"\"|"^");
 
 
 /* Clase 7 */
-OPRELACIONES;
+Tupla OPRELACIONALES[] = {
+        {"<", '0'},
+        {">", '1'},
+        {"<=", '2'},
+        {">=", '3'},
+        {"==", '4'},
+        {"!=", '5'}
+    };
 
 
 /* Clase 8 */
+OPASIGNACION    ("=");
 
 /* Palabras reservadas */
 
