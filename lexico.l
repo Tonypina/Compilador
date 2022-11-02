@@ -17,7 +17,7 @@
     
     /* Clase 0 */
     /* Estructura para definir palabras reservadas {palabra,valor} */
-    Tupla palabrasReservadas[] = {
+    Tupla PALRESERVADAS[] = {
         {"alternative", '0'},
         {"big", '1'},
         {"evaluate", '2'},
