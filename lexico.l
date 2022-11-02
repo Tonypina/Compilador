@@ -93,8 +93,8 @@ ENTERO      {DECIMAL}|{OCTAL}
 REAL        {DECIMAL}+[.]{DIGITO}+
 
 /* Clase 4 */
-CARACTER    '[{LETRA}!"#$%&/|=?¡/*-+¬><¿¬°@]'
-CADENAS     "[{LETRA}!"#$%&/|=?¡/*-+¬><¿¬°@]+"
+CARACTER    "'"[{LETRA}|"!"|"""|"#"|"$"|"%"|"&"|"/"|"|"|"="|"?"|"¡"|"/"|"*"|"-"|"+"|"¬"|">"|"<"|"¿"|"¬"|"°"|"@"]"'"
+CADENAS """[{LETRA}|"!"|"""|"#"|"$"|"%"|"&"|"/"|"|"|"="|"?"|"¡"|"/"|"*"|"-"|"+"|"¬"|">"|"<"|"¿"|"¬"|"°"|"@"]+"""
 
 
 /* Clase 5 */
@@ -109,6 +109,8 @@ OPRELACIONALES  "<"|">"|"<="|">="|"=="|"!="
 /* Clase 8 */
 OPASIGNACION    [=]
 
+"{"[^}\n]*"}"     /* Excluye una linea de comentarios */
+[ \t\n]+          /* Excluye los espacios en blanco */
 %%
 
 {PALRES}         {a = tokenPalabraReservada(yytext); fprintf(archSal, "(%i, %i)\n", a.class, a.val);}
