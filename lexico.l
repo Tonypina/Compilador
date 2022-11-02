@@ -12,7 +12,7 @@
 
     typedef struct Token {
         int class;
-        char val;
+        char atom;
     } Token;
     
     /* Clase 0 */
@@ -47,7 +47,7 @@
         {5, "!="}
     };
 
-    Token tokenPalabraReservada(char* palabra);
+    Token tokenPALRESERVADA(char* palabra);
 %}
 
 
@@ -76,7 +76,7 @@ CADENAS     (([COMILLAS][CARACTER]+[COMILLAS]")|([COMILLA][CARACTER][COMILLA]));
 
 
 /* Clase 5 */
-SIMESPECIALES   ("["|"]"|"("|")"|"{"|"}"|","|":"|";");
+SIMESPECIAL    ("["|"]"|"("|")"|"{"|"}"|","|":"|";");
 
 /* Clase 6 */
 OPARIMETICOS    ("+"|"-"|"*"|"/"|"%"|"\"|"^");
