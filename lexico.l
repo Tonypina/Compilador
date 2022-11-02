@@ -1,6 +1,7 @@
 %{
     // Código en C
     #include <stdio.h>
+    #include <stdlib.h>
     #include <string.h>
 
     #define MAX_IDENTIFICADORES 1000
@@ -67,6 +68,7 @@
     Token tokenIdentificadores(char* id);
     Token tokenConstantesNumericas(char* cte);
     Token tokenConstantesReales(char* cte);
+    Token tokenSimbolosEspeciales(char* s);
 %}
 
 
@@ -93,7 +95,7 @@ CADENAS     "[{LETRA}!"#$%&/|=?¡/*-+¬><¿¬°@]+"
 
 
 /* Clase 5 */
-SIMESPECIAL    ("["|"]"|"("|")"|"{"|"}"|","|":"|";");
+SIMESPECIAL    "["|"]"|"("|")"|"{"|"}"|","|":"|";"
 
 /* Clase 6 */
 OPARIMETICOS    ("+"|"-"|"*"|"/"|"%"|"\"|"^");
@@ -106,10 +108,11 @@ OPASIGNACION    ("=");
 
 %%
 
-{PALRES}   {a = tokenPalabraReservada(yytext); fprintf(archSal, "(%i, %i)\n", a.class, a.val);}
-{IDENT}    {a = tokenIdentificadores(yytext); fprintf(archSal, "(%i, %i)\n", a.class, a.val);}
-{ENTERO}   {a = tokenConstantesNumericas(yytext); fprintf(archSal, "(%i, %i)\n", a.class, a.val);}
-{REAL}     {a = tokenConstantesReales(yytext); fprintf(archSal, "(%i, %i)\n", a.class, a.val);}
+{PALRES}        {a = tokenPalabraReservada(yytext); fprintf(archSal, "(%i, %i)\n", a.class, a.val);}
+{IDENT}         {a = tokenIdentificadores(yytext); fprintf(archSal, "(%i, %i)\n", a.class, a.val);}
+{ENTERO}        {a = tokenConstantesNumericas(yytext); fprintf(archSal, "(%i, %i)\n", a.class, a.val);}
+{REAL}          {a = tokenConstantesReales(yytext); fprintf(archSal, "(%i, %i)\n", a.class, a.val);}
+{SIMESPECIAL}   {a = tokenSimbolosEspeciales(yytext); fprintf(archSal, "(%i, %i)\n", a.class, a.val);}
 
 %%
 
@@ -234,3 +237,14 @@ Token tokenConstantesReales( char* cte ) {
 
     return token_aux;
 }
+
+Token tokenSimbolosEspeciales( char* s ) {
+
+    Token token_aux;
+
+    token_aux.class = 5;
+    token_aux.val = s[0] + 0;
+
+    return token_aux;
+}
+
