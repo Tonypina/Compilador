@@ -5,6 +5,7 @@
 
     #define MAX_IDENTIFICADORES 1000
     #define MAX_CTESNUMERICAS 1000
+    #define MAX_CTESREALES 1000
 
     FILE *yyin;
     FILE *archSal;
@@ -60,10 +61,12 @@
 
     Id TABLA_IDENTIFICADORES[MAX_IDENTIFICADORES] = {-1, 0, 0};
     char* TABLA_CTESNUMERICAS[MAX_CTESNUMERICAS] = {NULL};
+    char* TABLA_CTESREALES[MAX_CTESREALES] = {NULL};
 
     Token tokenPalabraReservada(char* palabra);
     Token tokenIdentificadores(char* id);
     Token tokenConstantesNumericas(char* cte);
+    Token tokenConstantesReales(char* cte);
 %}
 
 
@@ -106,6 +109,7 @@ OPASIGNACION    ("=");
 {PALRES}   {a = tokenPalabraReservada(yytext); fprintf(archSal, "(%i, %i)\n", a.class, a.val);}
 {IDENT}    {a = tokenIdentificadores(yytext); fprintf(archSal, "(%i, %i)\n", a.class, a.val);}
 {ENTERO}   {a = tokenConstantesNumericas(yytext); fprintf(archSal, "(%i, %i)\n", a.class, a.val);}
+{REAL}     {a = tokenConstantesReales(yytext); fprintf(archSal, "(%i, %i)\n", a.class, a.val);}
 
 %%
 
@@ -196,6 +200,29 @@ Token tokenConstantesNumericas( char* cte ) {
             TABLA_CTESNUMERICAS[i] = cte;
 
             token_aux.class = 2;
+            token_aux.val = i;
+
+            return token_aux;
+        }
+    }
+    
+    token_aux.class = -1;
+    token_aux.val = -1;
+
+    return token_aux;
+}
+
+Token tokenConstantesReales( char* cte ) {
+
+    Token token_aux;
+
+    for ( int i = 0; i < MAX_CTESREALES; i++ ) {
+
+        if ( !TABLA_CTESREALES[i] ) {
+
+            TABLA_CTESREALES[i] = cte;
+
+            token_aux.class = 3;
             token_aux.val = i;
 
             return token_aux;
