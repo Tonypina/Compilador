@@ -181,12 +181,12 @@ int main (int argc, char *argv[]) {
     imprimirTablas();
 
     // Liberación de memoria
-    SLL_Delete(&TABLA_PALRESERVADAS)
-    SLL_Delete(&TABLA_IDENTIFICADORES)
-    SLL_Delete(&TABLA_CTESNUMERICAS)
-    SLL_Delete(&TABLA_CTESREALES)
-    SLL_Delete(&TABLA_CTESCADENAS)
-    SLL_Delete(&TABLA_OPRELACIONALES)
+    SLL_Delete(&TABLA_PALRESERVADAS);
+    SLL_Delete(&TABLA_IDENTIFICADORES);
+    SLL_Delete(&TABLA_CTESNUMERICAS);
+    SLL_Delete(&TABLA_CTESREALES);
+    SLL_Delete(&TABLA_CTESCADENAS);
+    SLL_Delete(&TABLA_OPRELACIONALES);
 
     fclose(archSal);
     fclose(yyin);
@@ -323,7 +323,7 @@ Token tokenOperadoresRelacionales( char* s ) {
         token_aux.val = TABLA_OPRELACIONALES->cursor->pos;
 
         return token_aux;
-    }a
+    }
 
     // No es operador valido
     fprintf(archSal, "ERR: \"%s\" no es un operador válido. ", s);
