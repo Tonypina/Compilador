@@ -53,22 +53,24 @@ OCTAL       (O-o)[0-7]*;
 ENTERO      (DECIMAL|OCTAL);
 
 /* Clase 3 */
-REAL        (DECIMAL)+[.](DIGITO)+
+REAL        (DECIMAL)+[.](DIGITO)+;
 
 /* Clase 4 */
 
 
 /* Clase 5 */
-
+SIMESPECIALES   ("["|"]"|"("|")"|"{"|"}"|","|":"|";");
 
 /* Clase 6 */
+OPARIMETICOS    ("+"|"-"|"*"|"/"|"%"|"\"|"^");
 
 
 /* Clase 7 */
+OPRELACIONES;
 
 
 /* Clase 8 */
-
+OPEASIGNACION   (=);
 
 /* Palabras reservadas */
 
