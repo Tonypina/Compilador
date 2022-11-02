@@ -6,8 +6,8 @@
     FILE *archSal;
 
     typedef struct Tupla {
-        char* str;
-        char atom;
+        int val;
+        char* atom;
     } Tupla;
 
     typedef struct Token {
@@ -18,23 +18,33 @@
     /* Clase 0 */
     /* Estructura para definir palabras reservadas {palabra,valor} */
     Tupla PALRESERVADAS[] = {
-        {"alternative", '0'},
-        {"big", '1'},
-        {"evaluate", '2'},
-        {"instead", '3'},
-        {"large", '4'},
-        {"loop", '5'},
-        {"make", '6'},
-        {"number", '7'},
-        {"other", '8'},
-        {"real", '9'},
-        {"repeat", '10'},
-        {"select", '11'},
-        {"small", '12'},
-        {"step", '13'},
-        {"stop", '14'},
-        {"symbol", '15'},
-        {"throw", '16'}
+        {0, "alternative"},
+        {1, "big"},
+        {2, "evaluate"},
+        {3, "instead"},
+        {4, "large"},
+        {5, "loop"},
+        {6, "make"},
+        {7, "number"},
+        {8, "other"},
+        {9, "real"},
+        {10, "repeat"},
+        {11, "select"},
+        {12, "small"},
+        {13, "step"},
+        {14, "stop"},
+        {15, "symbol"},
+        {16, "throw"}
+    };
+
+    /* Clase 7 */
+    Tupla OPRELACIONALES[] = {
+        {0, "<"},
+        {1, ">"},
+        {2, "<="},
+        {3, ">="},
+        {4, "=="},
+        {5, "!="}
     };
 
     Token tokenPalabraReservada(char* palabra);
@@ -72,30 +82,19 @@ SIMESPECIALES   ("["|"]"|"("|")"|"{"|"}"|","|":"|";");
 OPARIMETICOS    ("+"|"-"|"*"|"/"|"%"|"\"|"^");
 
 
-/* Clase 7 */
-Tupla OPRELACIONALES[] = {
-        {"<", '0'},
-        {">", '1'},
-        {"<=", '2'},
-        {">=", '3'},
-        {"==", '4'},
-        {"!=", '5'}
-    };
-
-
 /* Clase 8 */
 OPASIGNACION    ("=");
 
-/* Palabras reservadas */
+%%
 
-{PALRES}   {printf("%s", yytext);}
+{PALRES}   printf("%s", yytext);
 
 %%
 
 int main (int argc, char *argv[]) {
     
     yyin = fopen(argv[1],"r");
-    archSal = fopen("Entrada.txt","w");
+    archSal = fopen("Salida.txt","w");
     yylex();
     fclose(archEnt);
 
@@ -106,9 +105,9 @@ Token tokenPalabraReservada( char* palabra ) {
 
     Token aux;
 
-    for (int i = 0; i < (*(&palabrasReservadas + 1) - palabrasReservadas); i++) {
+    for (int i = 0; i < (*(&PALRESERVADAS + 1) - PALRESERVADAS); i++) {
 
-        if ( !strcmp(palabra, palabrasReservadas[i].str) ) {
+        if ( !strcmp(palabra, PALRESERVADAS[i].atom) ) {
             printf("Es una palabra reservada: %s", palabra);
             aux.class = 0;
             aux.val = (char)i;
