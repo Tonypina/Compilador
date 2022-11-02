@@ -94,13 +94,13 @@ CADENAS     \"[^\n"']+\"
 SIMESPECIAL    "["|"]"|"("|")"|"{"|"}"|","|":"|";"
 
 /* Clase 6 */
-OPARITMETICOS    ([+*/%\^-])
+OPARITMETICOS   "+"|"*"|"/"|"%"|"\"|"^"|"-"
 
 /* Clase 7 */
 OPRELACIONALES  "<"|">"|"<="|">="|"=="|"!="
 
 /* Clase 8 */
-OPASIGNACION    [=]
+OPASIGNACION    "="
 
 %%
 
