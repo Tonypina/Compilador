@@ -42,27 +42,26 @@ ENTERO      {DIGITO}+
 LETRA       [a-zA-Z]
 ESPACIO     [" "]
 GUION       [-_]
-PALRES      ALTERNATIVE|BIG|EVALUATE|INSTEAD|LARGE|LOOP|MAKE|NUMBER|OTHER|REAL|REPEAT|SELECT|SMALL|STEP|STOP|SYMBOL|THROW
 
-//Clase 0
+/* Clase 0 */
 
-//Clase 1
+/* Clase 1 */
 IDENT       $[LETRA]+;
 
-//Clase 2
+/* Clase 2 */
 ENTERO      
 
-//Clase 3
+/* Clase 3 */
 
-//Clase 4
+/* Clase 4 */
 
-//Clase 5
+/* Clase 5 */
 
-//Clase 6
+/* Clase 6 */
 
-//Clase 7
+/* Clase 7 */
 
-//Clase 8
+/* Clase 8 */
 
 /* Palabras reservadas */
 
