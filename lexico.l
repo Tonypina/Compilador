@@ -70,7 +70,8 @@
     Token tokenConstantesReales(char* cte);
     Token tokenSimbolosEspeciales(char* s);
     Token tokenOperadoresAritmeticos(char* s);
-    Token tokenOperadoresRelacionales( char* s )
+    Token tokenOperadoresRelacionales( char* s );
+    Token tokenOperadorAsignacion( char* s );
 %}
 
 
@@ -100,7 +101,7 @@ CADENAS     "[{LETRA}!"#$%&/|=?¡/*-+¬><¿¬°@]+"
 SIMESPECIAL    "["|"]"|"("|")"|"{"|"}"|","|":"|";"
 
 /* Clase 6 */
-OPARITMETICOS    "+"|"-"|"*"|"/"|"%"|"\"|"^"
+OPARITMETICOS    ([+*/%\^-])
 
 /* Clase 7 */
 OPRELACIONALES  "<"|">"|"<="|">="|"=="|"!="
@@ -269,7 +270,7 @@ Token tokenOperadoresRelacionales( char* s ) {
 
     for (int i = 0; i < (*(&TABLA_OPRELACIONALES + 1) - TABLA_OPRELACIONALES); i++) {
 
-        if ( !strcmp(palabra, TABLA_OPRELACIONALES[i].atom) ) {
+        if ( !strcmp(s, TABLA_OPRELACIONALES[i].atom) ) {
             aux.class = 7;
             aux.val = i;
             return aux;
