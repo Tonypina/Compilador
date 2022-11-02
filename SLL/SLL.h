@@ -8,6 +8,10 @@
 #include <assert.h>
 #include <string.h>
 
+/**
+ * @brief Estructura del Nodo
+ * 
+ */
 typedef struct Node
 {
 	int pos;
@@ -16,6 +20,10 @@ typedef struct Node
 	struct Node* next;
 } Node;
 
+/**
+ * @brief Lista Ligada Simple
+ * 
+ */
 typedef struct SLL
 {
 	Node* first;

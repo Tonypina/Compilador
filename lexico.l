@@ -1,19 +1,36 @@
+
+/* Fecha: 02 / 11 / 2022 */
+
+/* El programa realiza un análisis léxico para un lenguaje definido     */
+/* anteriormente, es decir, servirá de primera parte para el compilador */
+/* de dicho lenguaje.                                                   */
+
+/*              Autores             */
+/* - Piña Rossette Marco Antonio      */
+/* - Reyes Mendoza Miriam Guadalupe   */
+
 %{
-    // Código en C
+    /* Cabeceras de utilidad */
     #include <stdio.h>
     #include <stdlib.h>
     #include <string.h>
+
+    /* Lista Ligada Simple */
     #include "SLL/SLL.h"
 
+    /* Archivo de entrada y salida */
     FILE *yyin;
     FILE *archSal;
 
+    /* Estructura Token */
     typedef struct Token {
         int class;
         int val;
     } Token;
     
+    /* Token auxiliar */
     Token a;
+
     /* Clase 0 */
     /* Estructura para definir palabras reservadas {palabra,valor} */
     char* PALRESERVADAS[] = {
@@ -46,7 +63,7 @@
         "!="
     };
 
-    
+    /* Tablas basadas en listas ligadas simples */
     SLL* TABLA_PALRESERVADAS;
     SLL* TABLA_IDENTIFICADORES;
     SLL* TABLA_CTESNUMERICAS;
@@ -54,6 +71,7 @@
     SLL* TABLA_CTESCADENAS;
     SLL* TABLA_OPRELACIONALES;
 
+    /* Declaración de las funciones que crean tokens */
     Token tokenPalabraReservada(char* palabra);
     Token tokenIdentificadores(char* id);
     Token tokenConstantesNumericas(char* cte);
@@ -68,6 +86,7 @@
     char* recortarCadena(char* s);
 %}
 
+/* Expresiones Regulares */
 
 DIGITO      [0-9]
 LETRA       [a-zA-Z]
@@ -121,6 +140,7 @@ OPASIGNACION    [=]
 
 %%
 
+/* Función main, abre los archivos e inicializa las tablas */
 int main (int argc, char *argv[]) {
 
     if ( (yyin = fopen(argv[1], "rt")) == NULL ) {
@@ -166,6 +186,7 @@ int main (int argc, char *argv[]) {
     return 0;
 }
 
+/* Imprime las tablas en forma de tuplas ( a, b, c ) */
 void imprimirTablas() {
     fprintf(archSal, "\n-------Tabla de Palabras Reservadas--------\n");
     SLL_Print(TABLA_PALRESERVADAS, archSal);
@@ -181,10 +202,12 @@ void imprimirTablas() {
     SLL_Print(TABLA_OPRELACIONALES, archSal);
 }
 
+/* Genera token para una palabra reservada */
 Token tokenPalabraReservada( char* palabra ) {
 
     Token aux;
 
+    // Si está en la tabla
     if (SLL_Search(TABLA_PALRESERVADAS, palabra)) {
         aux.class = 0;
         aux.val = TABLA_PALRESERVADAS->cursor->pos;
@@ -199,10 +222,12 @@ Token tokenPalabraReservada( char* palabra ) {
     return aux;
 }
 
+/* Genera token para un identificador */
 Token tokenIdentificadores( char* id ) {
 
     Token token_aux;
 
+    // Si ya existe
     if (SLL_Search(TABLA_IDENTIFICADORES, id)) {
 
         fprintf(archSal, "ERR: \"%s\" ya existe. ", id);
@@ -218,6 +243,7 @@ Token tokenIdentificadores( char* id ) {
     return token_aux;
 }
 
+/* Genera token de constantes numericas */
 Token tokenConstantesNumericas( char* cte ) {
 
     Token token_aux;
@@ -229,6 +255,7 @@ Token tokenConstantesNumericas( char* cte ) {
     return token_aux;
 }
 
+/* Genera token de constantes reales */
 Token tokenConstantesReales( char* cte ) {
 
     Token token_aux;
@@ -240,6 +267,7 @@ Token tokenConstantesReales( char* cte ) {
     return token_aux;
 }
 
+/* Genera token de constantes de cadenas */
 Token tokenConstantesCadenas( char* cte ) {
 
     Token token_aux;
@@ -251,26 +279,33 @@ Token tokenConstantesCadenas( char* cte ) {
     return token_aux;
 }
 
+/* Genera token de simbolos especiales */
 Token tokenSimbolosEspeciales( char* s ) {
 
     Token token_aux;
 
     token_aux.class = 5;
+
+    // Se envía el ASCII
     token_aux.val = s[0] + 0;
 
     return token_aux;
 }
 
+/* Genera token de operadores aritméticos */
 Token tokenOperadoresAritmeticos( char* s ) {
 
     Token token_aux;
 
     token_aux.class = 6;
+
+    // Se envía el ASCII
     token_aux.val = s[0] + 0;
 
     return token_aux;
 }
 
+/* Genra token de operadores relacionales */
 Token tokenOperadoresRelacionales( char* s ) {
 
     Token token_aux;
@@ -280,20 +315,23 @@ Token tokenOperadoresRelacionales( char* s ) {
         token_aux.val = TABLA_OPRELACIONALES->cursor->pos;
 
         return token_aux;
-    }
+    }a
 
-    // No es palabra reservada
+    // No es operador valido
     fprintf(archSal, "ERR: \"%s\" no es un operador válido. ", s);
     token_aux.class = -1;
     token_aux.val = -1;
     return token_aux;
 }
 
+/* Genera token de operadores de asignación */
 Token tokenOperadorAsignacion( char* s ) {
 
     Token token_aux;
 
     token_aux.class = 8;
+
+    // Se envía el ASCII
     token_aux.val = s[0] + 0;
 
     return token_aux;

@@ -1,6 +1,13 @@
 
 #include "SLL.h"
-
+/**
+ * @brief Crea un nuevo nodo de la lista
+ * 
+ * @param _pos Posición del nodo en la lista
+ * @param _name Nombre del nodo
+ * @param _type Tipo de dato
+ * @return Node* 
+ */
 static Node* newNode( int _pos, char* _name, int _type )
 {
 	Node* n = (Node*) malloc( sizeof( Node ) );
@@ -66,6 +73,16 @@ bool SLL_IsEmpty( SLL* this )
 	return (!this->first);
 }
 
+/**
+ * @brief Inserta en la parte de atrás de la lista
+ * 
+ * @param this Referencia a la lista misma
+ * @param pos Valor de posición que tendrá el nodo
+ * @param name Nombre del nodo
+ * @param type Tipo
+ * @return true si insertó correctamente
+ * @return false si no pudo insertar
+ */
 bool SLL_Insert_back( SLL* this, int pos, char* name, int type )
 {
 	assert( this );
@@ -88,6 +105,16 @@ bool SLL_Insert_back( SLL* this, int pos, char* name, int type )
 	return done;
 }
 
+/**
+ * @brief Inserta en la parte delantera de la lista
+ * 
+ * @param this Referencia a la lista misma
+ * @param pos Posición del nodo en la lista
+ * @param name Nombre del nodo
+ * @param type Tipo
+ * @return true Si pudo insertar
+ * @return false Si no pudo insertar
+ */
 bool SLL_Insert_front( SLL* this, int pos, char* name, int type )
 {
 	assert(this);
@@ -105,6 +132,17 @@ bool SLL_Insert_front( SLL* this, int pos, char* name, int type )
 	}
 	return done;
 }
+
+/**
+ * @brief Inserta después del cursor
+ * 
+ * @param this Referencia a la misma lista
+ * @param pos Posición del nodo
+ * @param name Nombre del nodo
+ * @param type Tipo del nodo
+ * @return true Si pudo insertar
+ * @return false Si no pudo insertar
+ */
 bool SLL_Insert_after(SLL* this, int pos, char* name, int type){
 	assert(this);
 	bool done = false;
@@ -119,6 +157,16 @@ bool SLL_Insert_after(SLL* this, int pos, char* name, int type){
 	return done;
 }
 
+/**
+ * @brief Saca nodos del frente de la lista
+ * 
+ * @param this Referencia a la misma lista
+ * @param pos_back Valor posición regresado del nodo a sacar
+ * @param name_back Valor nombre regresado del nodo a sacar
+ * @param type_back Valor tipo regresado del nodo a sacar
+ * @return true Si pudo sacar al nodo de la lista
+ * @return false Si no pudo sacar al nodo de la lista
+ */
 bool SLL_Remove_front( SLL* this, int* pos_back, char* name_back, int* type_back )
 {
 	assert( this );
@@ -153,6 +201,16 @@ bool SLL_PeekFront( SLL* this, int* pos_back, char* name_back, int* type_back )
 	return true;
 }
 
+/**
+ * @brief Obtiene los valores del último nodo sin sacarlo
+ * 
+ * @param this Referencia a la misma lista
+ * @param pos_back Valor posición del nodo
+ * @param name_back Valor nombre del nodo
+ * @param type_back Valor tipo del nodo
+ * @return true Si encontró al nodo
+ * @return false Si no encontró al nodo
+ */
 bool SLL_PeekBack( SLL* this, int* pos_back, char* name_back, int* type_back )
 {
 	assert(this);
@@ -163,11 +221,21 @@ bool SLL_PeekBack( SLL* this, int* pos_back, char* name_back, int* type_back )
 	return true;
 }
 
+/**
+ * @brief Coloca el cursor al inicio de la lista
+ * 
+ * @param this Referencia a la misma lista
+ */
 void SLL_Cursor_first( SLL* this )
 {
 	this->cursor = this->first;
 }
 
+/**
+ * @brief Coloca el cursor al final de la lista
+ * 
+ * @param this Referencia a la misma lista
+ */
 void SLL_Cursor_last( SLL* this )
 {
 	this->cursor = this->last;
@@ -264,6 +332,12 @@ size_t SLL_Len( SLL* this )
 	return this->len;
 }
 
+/**
+ * @brief Imprime los nodos en forma de tuplas
+ * 
+ * @param this Referencia a la misma lista
+ * @param out Referencia a un archivo de salida
+ */
 void SLL_Print( SLL* this, FILE* out )
 {
 	assert( this );
