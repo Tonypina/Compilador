@@ -83,7 +83,7 @@ OCTAL       [Oo][0-7]*
 ENTERO      {DECIMAL}|{OCTAL}
 
 /* Clase 3 */
-REAL        {DECIMAL}+[.]{DIGITO}+
+REAL        {DIGITO}+[.]{DIGITO}+
 
 /* Clase 4 */
 CARACTER    '[^\n"']+'
