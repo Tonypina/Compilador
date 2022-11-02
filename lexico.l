@@ -17,7 +17,7 @@
     
     /* Clase 0 */
     /* Estructura para definir palabras reservadas {palabra,valor} */
-    Tupla PALRESERVADAS[] = {
+    Tupla PALRESERVADA[] = {
         {"alternative", '0'},
         {"big", '1'},
         {"evaluate", '2'},
@@ -37,7 +37,7 @@
         {"throw", '16'}
     };
 
-    Token tokenPalabraReservada(char* palabra);
+    Token tokenPALRESERVADA(char* palabra);
 %}
 
 
@@ -66,14 +66,14 @@ CADENAS     (([COMILLAS][CARACTER]+[COMILLAS]")|([COMILLA][CARACTER][COMILLA]));
 
 
 /* Clase 5 */
-SIMESPECIALES   ("["|"]"|"("|")"|"{"|"}"|","|":"|";");
+SIMESPECIAL    ("["|"]"|"("|")"|"{"|"}"|","|":"|";");
 
 /* Clase 6 */
-OPARIMETICOS    ("+"|"-"|"*"|"/"|"%"|"\"|"^");
+OPARIMETICO    ("+"|"-"|"*"|"/"|"%"|"\"|"^");
 
 
 /* Clase 7 */
-Tupla OPRELACIONALES[] = {
+Tupla OPRELACIONAL[] = {
         {"<", '0'},
         {">", '1'},
         {"<=", '2'},
@@ -81,6 +81,8 @@ Tupla OPRELACIONALES[] = {
         {"==", '4'},
         {"!=", '5'}
     };
+Token tokenOPRELACIONAL(char* palabra);
+%}
 
 
 /* Clase 8 */
