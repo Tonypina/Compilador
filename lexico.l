@@ -65,6 +65,7 @@
     Token tokenOperadorAsignacion(char* s);
 
     void imprimirTablas();
+    char* recortarCadena(char* s);
 %}
 
 
@@ -75,7 +76,7 @@ ESPACIO     [" "]
 GUION       [-_]
 
 /* Clase 1 */
-IDENT       \${LETRA}+
+IDENT       \${LETRA}+{DIGITO}*
 
 /* Clase 2 */
 DECIMAL     [1-9]{DIGITO}*
@@ -94,13 +95,13 @@ CADENAS     \"[^\n"']+\"
 SIMESPECIAL    "["|"]"|"("|")"|"{"|"}"|","|":"|";"
 
 /* Clase 6 */
-OPARITMETICOS   "+"|"*"|"/"|"%"|"\"|"^"|"-"
+OPARITMETICOS   "+"|"*"|"/"|"%"|"\\"|"^"|"-"
 
 /* Clase 7 */
 OPRELACIONALES  "<"|">"|"<="|">="|"=="|"!="
 
 /* Clase 8 */
-OPASIGNACION    "="
+OPASIGNACION    [=]
 
 %%
 
@@ -180,6 +181,12 @@ void imprimirTablas() {
     SLL_Print(TABLA_OPRELACIONALES, archSal);
 }
 
+char* recortarCadena( char* s ) {
+    char* s_out;
+    s_out = strtok(s, " \n\t");
+    return s_out;
+}
+
 Token tokenPalabraReservada( char* palabra ) {
 
     Token aux;
@@ -199,15 +206,18 @@ Token tokenPalabraReservada( char* palabra ) {
 Token tokenIdentificadores( char* id ) {
 
     Token token_aux;
+    char* str_token = recortarCadena(id);
 
-    if (SLL_Search(TABLA_IDENTIFICADORES, id)) {
+    if (SLL_Search(TABLA_IDENTIFICADORES, str_token)) {
 
         printf("Identificador Repetido.");
 
         return token_aux;
     }
 
-    SLL_Insert_back(TABLA_IDENTIFICADORES, SLL_Len(TABLA_IDENTIFICADORES), id, -1);
+    fprintf(archSal, "Token: %s", str_token);
+
+    SLL_Insert_back(TABLA_IDENTIFICADORES, SLL_Len(TABLA_IDENTIFICADORES), str_token, -1);
     token_aux.class = 1;
     token_aux.val = SLL_Len(TABLA_IDENTIFICADORES)-1;
 
@@ -218,7 +228,7 @@ Token tokenConstantesNumericas( char* cte ) {
 
     Token token_aux;
 
-    SLL_Insert_back(TABLA_CTESNUMERICAS, SLL_Len(TABLA_CTESNUMERICAS), cte, 1);
+    SLL_Insert_back(TABLA_CTESNUMERICAS, SLL_Len(TABLA_CTESNUMERICAS), recortarCadena(cte), 1);
     token_aux.class = 2;
     token_aux.val = SLL_Len(TABLA_CTESNUMERICAS)-1;
 
@@ -229,7 +239,7 @@ Token tokenConstantesReales( char* cte ) {
 
     Token token_aux;
 
-    SLL_Insert_back(TABLA_CTESREALES, SLL_Len(TABLA_CTESREALES), cte, -1);
+    SLL_Insert_back(TABLA_CTESREALES, SLL_Len(TABLA_CTESREALES), recortarCadena(cte), -1);
     token_aux.class = 3;
     token_aux.val = SLL_Len(TABLA_CTESREALES)-1;
 
