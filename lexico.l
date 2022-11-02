@@ -180,6 +180,14 @@ int main (int argc, char *argv[]) {
 
     imprimirTablas();
 
+    // Liberación de memoria
+    SLL_Delete(&TABLA_PALRESERVADAS)
+    SLL_Delete(&TABLA_IDENTIFICADORES)
+    SLL_Delete(&TABLA_CTESNUMERICAS)
+    SLL_Delete(&TABLA_CTESREALES)
+    SLL_Delete(&TABLA_CTESCADENAS)
+    SLL_Delete(&TABLA_OPRELACIONALES)
+
     fclose(archSal);
     fclose(yyin);
 
