@@ -4,6 +4,7 @@
     #include <string.h>
 
     #define MAX_IDENTIFICADORES 1000
+    #define MAX_CTESNUMERICAS 1000
 
     FILE *yyin;
     FILE *archSal;
@@ -58,9 +59,11 @@
     };
 
     Id TABLA_IDENTIFICADORES[MAX_IDENTIFICADORES] = {-1, 0, 0};
+    char* TABLA_CTESNUMERICAS[MAX_CTESNUMERICAS] = {NULL};
 
     Token tokenPalabraReservada(char* palabra);
     Token tokenIdentificadores(char* id);
+    Token tokenConstantesNumericas(char* cte);
 %}
 
 
@@ -100,8 +103,9 @@ OPASIGNACION    ("=");
 
 %%
 
-{IDENT}    {a = tokenIdentificadores(yytext); fprintf(archSal, "(%i, %i)\n", a.class, a.val);}
 {PALRES}   {a = tokenPalabraReservada(yytext); fprintf(archSal, "(%i, %i)\n", a.class, a.val);}
+{IDENT}    {a = tokenIdentificadores(yytext); fprintf(archSal, "(%i, %i)\n", a.class, a.val);}
+{ENTERO}   {a = tokenConstantesNumericas(yytext); fprintf(archSal, "(%i, %i)\n", a.class, a.val);}
 
 %%
 
@@ -161,6 +165,7 @@ Token tokenIdentificadores( char* id ) {
 
         if ( !strcmp(id, TABLA_IDENTIFICADORES[i].name) ) {
 
+            printf("Error léxico.");
             token_aux.class = -1;
             token_aux.val = -1;
 
@@ -176,6 +181,29 @@ Token tokenIdentificadores( char* id ) {
 
     token_aux.class = 1;
     token_aux.val = ultimo;
+
+    return token_aux;
+}
+
+Token tokenConstantesNumericas( char* cte ) {
+
+    Token token_aux;
+
+    for ( int i = 0; i < MAX_CTESNUMERICAS; i++ ) {
+
+        if ( !TABLA_CTESNUMERICAS[i] ) {
+
+            TABLA_CTESNUMERICAS[i] = cte;
+
+            token_aux.class = 2;
+            token_aux.val = i;
+
+            return token_aux;
+        }
+    }
+    
+    token_aux.class = -1;
+    token_aux.val = -1;
 
     return token_aux;
 }
