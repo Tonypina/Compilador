@@ -1,0 +1,277 @@
+
+#include "SLL.h"
+
+static Node* newNode( int _pos, char* _name, int _type )
+{
+	Node* n = (Node*) malloc( sizeof( Node ) );
+	if( n ){
+		n->pos = _pos;
+		n->name = _name;
+		n->type = _type;
+		n->next = NULL;
+	}
+	return n;
+}
+
+/**
+ * @brief Crea una nueva lista SLL
+ * @return Referencia a la nueva lista
+ */
+SLL* SLL_New()
+{
+	SLL* list = (SLL*) malloc( sizeof( SLL ) );
+	if( list ){
+		list->first = NULL;
+		list->last = NULL;
+		list->cursor = NULL;
+		list->len = 0;
+	}
+	return list;
+}
+
+/**
+ * @brief Destruye una lista SLL
+ * @param this Referencia a un objeto SLL
+ * @post La lista se destruyó y no debiera ser utilizado de nuevo
+ */
+void SLL_Delete( SLL** this )
+{
+	assert(*this);
+	if( *this ){
+      // primero borra todos los nodos
+		SLL* l = *this;
+		while(l->len){
+			Node* tmp = l->first->next;
+			free( l->first );
+			l->first = tmp;
+			--l->len;
+		}
+      // luego borra al propio objeto this
+		free(*this);
+      // luego hace que this sea NULL
+		*this = NULL;
+	}
+}
+
+/**
+ * @brief Indica si la lista está vacía
+ * @param this Referencia a un objeto SLL
+ * @return true si la lista está vacía; false en cualquier otro caso
+ * @pre La lista existe
+ */
+bool SLL_IsEmpty( SLL* this )
+{
+	assert( this );
+
+	return (!this->first);
+}
+
+bool SLL_Insert_back( SLL* this, int pos, char* name, int type )
+{
+	assert( this );
+
+	bool done = false;
+
+	Node* n = newNode( pos, name, type );
+	if( n ){
+		done = true;
+
+		if( SLL_IsEmpty( this ) ){
+			this->first = this->last = this->cursor = n;
+		}
+		else{
+			this->last->next = n;
+			this->last = n;
+		}
+		++this->len;
+	}
+	return done;
+}
+
+bool SLL_Insert_front( SLL* this, int pos, char* name, int type )
+{
+	assert(this);
+	bool done = false;
+	Node* n = newNode(pos, name, type);
+	if(n){
+		done = true;
+		if(SLL_IsEmpty(this)){
+			this->first = this->last = this->cursor = n;
+		} else { 
+			n->next = this->first;
+			this->first = n;
+		}
+		++this->len;
+	}
+	return done;
+}
+bool SLL_Insert_after(SLL* this, int pos, char* name, int type){
+	assert(this);
+	bool done = false;
+	Node* n = newNode(pos, name, type);
+	if(n){
+		done = true;
+		Node* tmp = this->cursor->next;
+		this->cursor->next = n;
+		n->next = tmp;
+		++this->len;
+	}
+	return done;
+}
+
+bool SLL_Remove_front( SLL* this, int* pos_back, char* name_back, int* type_back )
+{
+	assert( this );
+
+	if( SLL_IsEmpty( this ) ){ return false; }
+	*pos_back = this->first->pos;
+	name_back = this->first->name;
+	*type_back = this->first->type;
+	//this->first->data = *data_back;
+	Node* tmp = this->first->next;
+	free( this->first );
+	this->first = tmp;
+	--this->len;
+	return true;
+}
+
+/**
+ * @brief Devuelve el elemento en el frente de la lista.
+ * @param this Referencia a un objeto SLL.
+ * @param data_back El valor del elemento en el frente de la lista. No tiene
+ * sentido si el valor devuelto por la función es false.
+ * @return true si la lista no está vacía; false en caso contrario.
+ */
+bool SLL_PeekFront( SLL* this, int* pos_back, char* name_back, int* type_back )
+{
+	assert(this);
+	if (SLL_IsEmpty(this)) {return false;}
+	*pos_back = this->first->pos;
+	name_back = this->first->name;
+	*type_back = this->first->type;
+
+	return true;
+}
+
+bool SLL_PeekBack( SLL* this, int* pos_back, char* name_back, int* type_back )
+{
+	assert(this);
+	if (SLL_IsEmpty(this)){ return false;}
+	*pos_back = this->last->pos;
+	name_back = this->last->name;
+	*type_back = this->last->type;
+	return true;
+}
+
+void SLL_Cursor_first( SLL* this )
+{
+	this->cursor = this->first;
+}
+
+void SLL_Cursor_last( SLL* this )
+{
+	this->cursor = this->last;
+}
+
+/**
+ * @brief Vacía la lista sin destruirla
+ * @param this Referencia a un objeto SLL
+ * @pre La lista existe
+ */
+void SLL_MakeEmpty( SLL* this )
+{
+	while(this->len){
+		--this->last;
+		free(this->last->next);
+		--this->len;
+	}
+}
+
+/**
+ * @brief Busca si un elemento está en la lista.
+ * @param this Referencia a un objeto SLL.
+ * @param key El valor que estamos buscando.
+ * @return true si se encontró una coincidencia; false en caso contrario.
+ * @post El estado del objeto NO se modifica.
+ */
+bool SLL_FindIf( SLL* this, char* key )
+{
+	assert(this);
+	bool found = false;
+	this->cursor = this->first;
+	if (!SLL_IsEmpty(this)){
+		for(Node* it = this->first; it->next; it = it->next){
+			if ( !strcmp(key, it->name) ){
+				found = true;
+				break;
+			}
+		}
+	}
+	return found;
+}
+
+/**
+ * @brief Busca si un elemento está en la lista.
+ * @param this Referencia a un objeto SLL.
+ * @param key El valor que estamos buscando.
+ * @return true si se encontró una coincidencia; false en caso contrario.
+ * @post Coloca al cursor en el nodo en el que se hubiera encontrado una
+ * coincidencia
+ */
+bool SLL_Search( SLL* this, char* key )
+{
+	assert( this );
+
+	bool found = false;
+
+	
+	if( !SLL_IsEmpty( this ) ){
+
+		for( Node* it = this->first; it->next != NULL; it = it->next ){
+			if( !strcmp(key, it->name) ){
+				found = true;
+				this->cursor = it;
+				break;
+			}
+		}
+	}
+	return found;
+}
+
+/**
+ * @brief Mueve al cursor un elemento a la derecha.
+ *
+ * @param this Referencia a un objeto SLL
+ *
+ * @post El cursor NO se mueve si vale NULL
+ */
+void SLL_Cursor_next( SLL* this )
+{
+	assert( this );
+
+	if( this->cursor ){
+		this->cursor = this->cursor->next;
+	}
+}
+
+/**
+ * @brief Devuelve el número de elementos actualmente en la lista.
+ * @param this Referencia a un objeto SLL.
+ * @return El número de elementos actualmente en la lista.
+ */
+size_t SLL_Len( SLL* this )
+{
+	return this->len;
+}
+
+void SLL_Print( SLL* this, FILE* out )
+{
+	assert( this );
+	
+	if( !SLL_IsEmpty( this ) ){
+
+		for( Node* it = this->first; it->next != NULL; it = it->next ){
+			fprintf(out, "( %d, %s, %d)\n", it->pos, it->name, it->type);
+		}
+	}
+}

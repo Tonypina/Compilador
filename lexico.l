@@ -3,24 +3,10 @@
     #include <stdio.h>
     #include <stdlib.h>
     #include <string.h>
-
-    #define MAX_IDENTIFICADORES 1000
-    #define MAX_CTESNUMERICAS 1000
-    #define MAX_CTESREALES 1000
+    #include "SLL/SLL.h"
 
     FILE *yyin;
     FILE *archSal;
-
-    typedef struct Tupla {
-        int val;
-        char* atom;
-    } Tupla;
-
-    typedef struct Id {
-        int pos;
-        char* name;
-        int type;
-    } Id;
 
     typedef struct Token {
         int class;
@@ -30,48 +16,55 @@
     Token a;
     /* Clase 0 */
     /* Estructura para definir palabras reservadas {palabra,valor} */
-    Tupla TABLA_PALRESERVADAS[] = {
-        {0, "alternative"},
-        {1, "big"},
-        {2, "evaluate"},
-        {3, "instead"},
-        {4, "large"},
-        {5, "loop"},
-        {6, "make"},
-        {7, "number"},
-        {8, "other"},
-        {9, "real"},
-        {10, "repeat"},
-        {11, "select"},
-        {12, "small"},
-        {13, "step"},
-        {14, "stop"},
-        {15, "symbol"},
-        {16, "throw"}
+    char* PALRESERVADAS[] = {
+        "alternative",
+        "big",
+        "evaluate",
+        "instead",
+        "large",
+        "loop",
+        "make",
+        "number",
+        "other",
+        "real",
+        "repeat",
+        "select",
+        "small",
+        "step",
+        "stop",
+        "symbol",
+        "throw"
     };
 
     /* Clase 7 */
-    Tupla TABLA_OPRELACIONALES[] = {
-        {0, "<"},
-        {1, ">"},
-        {2, "<="},
-        {3, ">="},
-        {4, "=="},
-        {5, "!="}
+    char* OPRELACIONALES[] = {
+        "<",
+        ">",
+        "<=",
+        ">=",
+        "==",
+        "!="
     };
 
-    Id TABLA_IDENTIFICADORES[MAX_IDENTIFICADORES] = {-1, 0, 0};
-    char* TABLA_CTESNUMERICAS[MAX_CTESNUMERICAS] = {NULL};
-    char* TABLA_CTESREALES[MAX_CTESREALES] = {NULL};
+    
+    SLL* TABLA_PALRESERVADAS;
+    SLL* TABLA_IDENTIFICADORES;
+    SLL* TABLA_CTESNUMERICAS;
+    SLL* TABLA_CTESREALES;
+    SLL* TABLA_CTESCADENAS;
+    SLL* TABLA_OPRELACIONALES;
 
     Token tokenPalabraReservada(char* palabra);
     Token tokenIdentificadores(char* id);
     Token tokenConstantesNumericas(char* cte);
     Token tokenConstantesReales(char* cte);
+    Token tokenConstantesCadenas(char* cte);
     Token tokenSimbolosEspeciales(char* s);
     Token tokenOperadoresAritmeticos(char* s);
-    Token tokenOperadoresRelacionales( char* s );
-    Token tokenOperadorAsignacion( char* s );
+    Token tokenOperadoresRelacionales(char* s);
+    Token tokenOperadorAsignacion(char* s);
+
+    void imprimirTablas();
 %}
 
 
@@ -82,7 +75,7 @@ ESPACIO     [" "]
 GUION       [-_]
 
 /* Clase 1 */
-IDENT       ${LETRA}+
+IDENT       \${LETRA}+
 
 /* Clase 2 */
 DECIMAL     [1-9]{DIGITO}*
@@ -93,8 +86,8 @@ ENTERO      {DECIMAL}|{OCTAL}
 REAL        {DECIMAL}+[.]{DIGITO}+
 
 /* Clase 4 */
-CARACTER    '[{LETRA}!"#$%&/|=?¡/*-+¬><¿¬°@]'
-CADENAS     "[{LETRA}!"#$%&/|=?¡/*-+¬><¿¬°@]+"
+CARACTER    '[^\n"']+'
+CADENAS     \"[^\n"']+\"
 
 
 /* Clase 5 */
@@ -109,23 +102,26 @@ OPRELACIONALES  "<"|">"|"<="|">="|"=="|"!="
 /* Clase 8 */
 OPASIGNACION    [=]
 
-"{"[^}\n]*"}"     /* Excluye una linea de comentarios */
-[ \t\n]+          /* Excluye los espacios en blanco */
 %%
 
 {PALRES}         {a = tokenPalabraReservada(yytext); fprintf(archSal, "(%i, %i)\n", a.class, a.val);}
 {IDENT}          {a = tokenIdentificadores(yytext); fprintf(archSal, "(%i, %i)\n", a.class, a.val);}
 {ENTERO}         {a = tokenConstantesNumericas(yytext); fprintf(archSal, "(%i, %i)\n", a.class, a.val);}
 {REAL}           {a = tokenConstantesReales(yytext); fprintf(archSal, "(%i, %i)\n", a.class, a.val);}
+{CADENAS}        {a = tokenConstantesCadenas(yytext), fprintf(archSal, "(%i, %i)\n", a.class, a.val);}
+{CARACTER}       {a = tokenConstantesCadenas(yytext), fprintf(archSal, "(%i, %i)\n", a.class, a.val);}
 {SIMESPECIAL}    {a = tokenSimbolosEspeciales(yytext); fprintf(archSal, "(%i, %i)\n", a.class, a.val);}
 {OPARITMETICOS}  {a = tokenOperadoresAritmeticos(yytext); fprintf(archSal, "(%i, %i)\n", a.class, a.val);}
 {OPRELACIONALES} {a = tokenOperadoresRelacionales(yytext); fprintf(archSal, "(%i, %i)\n", a.class, a.val);}
 {OPASIGNACION}   {a = tokenOperadorAsignacion(yytext); fprintf(archSal, "(%i, %i)\n", a.class, a.val);}
 
+"{"[^}\n]*"}"     /* Excluye una linea de comentarios */
+[ \t\n] {;}       /* Excluye los espacios en blanco */
+
 %%
 
 int main (int argc, char *argv[]) {
-    
+
     if ( (yyin = fopen(argv[1], "rt")) == NULL ) {
         printf("No se pudo abrir el archivo de entrada.\n");
         return 1;
@@ -133,30 +129,66 @@ int main (int argc, char *argv[]) {
 
         if ( (archSal = fopen("Salida.txt","w")) == NULL ) {
             printf("No se pudo abrir el archivo de salida.\n");
+            fclose(yyin);
             return 1;
         } else {
+
+            TABLA_PALRESERVADAS = SLL_New();
+            TABLA_IDENTIFICADORES = SLL_New();
+            TABLA_CTESNUMERICAS = SLL_New();
+            TABLA_CTESREALES = SLL_New();
+            TABLA_CTESCADENAS = SLL_New();
+            TABLA_OPRELACIONALES = SLL_New();
+
+            for (int i = 0; i < (*(&PALRESERVADAS + 1) - PALRESERVADAS)+1; i++) {
+                SLL_Insert_back(TABLA_PALRESERVADAS, i, PALRESERVADAS[i], -1);
+            }
+
+            for (int i = 0; i < (*(&OPRELACIONALES + 1) - OPRELACIONALES)+1; i++) {
+                SLL_Insert_back(TABLA_OPRELACIONALES, i, OPRELACIONALES[i], -1);
+            }
+
+            SLL_MakeEmpty(TABLA_IDENTIFICADORES);
+            SLL_MakeEmpty(TABLA_CTESNUMERICAS);
+            SLL_MakeEmpty(TABLA_CTESREALES);
+            SLL_MakeEmpty(TABLA_CTESCADENAS);
+
             yylex();
         }
-
-        fclose(archSal);
-        fclose(yyin);
     }
+
+    imprimirTablas();
+
+    fclose(archSal);
+    fclose(yyin);
 
     return 0;
 }
 
+void imprimirTablas() {
+    fprintf(archSal, "\n-------Tabla de Palabras Reservadas--------\n");
+    SLL_Print(TABLA_PALRESERVADAS, archSal);
+    fprintf(archSal, "\n-------Tabla de Palabras Identificadores--------\n");
+    SLL_Print(TABLA_IDENTIFICADORES, archSal);
+    fprintf(archSal, "\n-------Tabla de Constantes Enteras--------\n");
+    SLL_Print(TABLA_CTESNUMERICAS, archSal);
+    fprintf(archSal, "\n-------Tabla de Constantes Reales--------\n");
+    SLL_Print(TABLA_CTESREALES, archSal);
+    fprintf(archSal, "\n-------Tabla de Constantes Cadenas--------\n");
+    SLL_Print(TABLA_CTESCADENAS, archSal);
+    fprintf(archSal, "\n-------Tabla de Operadores Relacionales--------\n");
+    SLL_Print(TABLA_OPRELACIONALES, archSal);
+}
 
 Token tokenPalabraReservada( char* palabra ) {
 
     Token aux;
 
-    for (int i = 0; i < (*(&TABLA_PALRESERVADAS + 1) - TABLA_PALRESERVADAS); i++) {
+    if (SLL_Search(TABLA_PALRESERVADAS, palabra)) {
+        aux.class = 0;
+        aux.val = TABLA_PALRESERVADAS->cursor->pos;
 
-        if ( !strcmp(palabra, TABLA_PALRESERVADAS[i].atom) ) {
-            aux.class = 0;
-            aux.val = i;
-            return aux;
-        }
+        return aux;
     }
 
     // No es palabra reservada
@@ -167,35 +199,17 @@ Token tokenPalabraReservada( char* palabra ) {
 Token tokenIdentificadores( char* id ) {
 
     Token token_aux;
-    Id id_aux;
 
-    int ultimo;
+    if (SLL_Search(TABLA_IDENTIFICADORES, id)) {
 
-    for ( int i = 0; i < MAX_IDENTIFICADORES; i++ ) {
-        
-        if ( TABLA_IDENTIFICADORES[i].pos == -1 ) {
-            ultimo = i;
-            break;
-        }
+        printf("Identificador Repetido.");
 
-        if ( !strcmp(id, TABLA_IDENTIFICADORES[i].name) ) {
-
-            printf("Error léxico.");
-            token_aux.class = -1;
-            token_aux.val = -1;
-
-            return token_aux; // Ya existe el id
-        }
+        return token_aux;
     }
-    
-    id_aux.pos = ultimo;
-    id_aux.name = id;
-    id_aux.type = -1;
 
-    TABLA_IDENTIFICADORES[ultimo] = id_aux;
-
+    SLL_Insert_back(TABLA_IDENTIFICADORES, SLL_Len(TABLA_IDENTIFICADORES), id, -1);
     token_aux.class = 1;
-    token_aux.val = ultimo;
+    token_aux.val = SLL_Len(TABLA_IDENTIFICADORES)-1;
 
     return token_aux;
 }
@@ -204,21 +218,9 @@ Token tokenConstantesNumericas( char* cte ) {
 
     Token token_aux;
 
-    for ( int i = 0; i < MAX_CTESNUMERICAS; i++ ) {
-
-        if ( !TABLA_CTESNUMERICAS[i] ) {
-
-            TABLA_CTESNUMERICAS[i] = cte;
-
-            token_aux.class = 2;
-            token_aux.val = i;
-
-            return token_aux;
-        }
-    }
-    
-    token_aux.class = -1;
-    token_aux.val = -1;
+    SLL_Insert_back(TABLA_CTESNUMERICAS, SLL_Len(TABLA_CTESNUMERICAS), cte, 1);
+    token_aux.class = 2;
+    token_aux.val = SLL_Len(TABLA_CTESNUMERICAS)-1;
 
     return token_aux;
 }
@@ -227,21 +229,20 @@ Token tokenConstantesReales( char* cte ) {
 
     Token token_aux;
 
-    for ( int i = 0; i < MAX_CTESREALES; i++ ) {
+    SLL_Insert_back(TABLA_CTESREALES, SLL_Len(TABLA_CTESREALES), cte, -1);
+    token_aux.class = 3;
+    token_aux.val = SLL_Len(TABLA_CTESREALES)-1;
 
-        if ( !TABLA_CTESREALES[i] ) {
+    return token_aux;
+}
 
-            TABLA_CTESREALES[i] = cte;
+Token tokenConstantesCadenas( char* cte ) {
 
-            token_aux.class = 3;
-            token_aux.val = i;
+    Token token_aux;
 
-            return token_aux;
-        }
-    }
-    
-    token_aux.class = -1;
-    token_aux.val = -1;
+    SLL_Insert_back(TABLA_CTESCADENAS, SLL_Len(TABLA_CTESCADENAS), cte, -1);
+    token_aux.class = 4;
+    token_aux.val = SLL_Len(TABLA_CTESCADENAS)-1;
 
     return token_aux;
 }
@@ -270,16 +271,14 @@ Token tokenOperadoresRelacionales( char* s ) {
 
     Token aux;
 
-    for (int i = 0; i < (*(&TABLA_OPRELACIONALES + 1) - TABLA_OPRELACIONALES); i++) {
+    if (SLL_Search(TABLA_OPRELACIONALES, s)) {
+        aux.class = 7;
+        aux.val = TABLA_OPRELACIONALES->cursor->pos;
 
-        if ( !strcmp(s, TABLA_OPRELACIONALES[i].atom) ) {
-            aux.class = 7;
-            aux.val = i;
-            return aux;
-        }
+        return aux;
     }
 
-    // No es operador
+    // No es palabra reservada
     printf("Error léxico.\n");
     return aux;
 }

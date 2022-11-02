@@ -1,1 +1,18 @@
 alternative
+throw
+$identificador
+$otro
+$otro2
+8
+198
+O32
+4.3
+21.567
+[
+<
+!=
++
+*
+=
+"Hola como estás"
+'u'
