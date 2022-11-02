@@ -12,7 +12,7 @@
 
     typedef struct Token {
         int class;
-        char atom;
+        int val;
     } Token;
     
     /* Clase 0 */
@@ -47,32 +47,30 @@
         {5, "!="}
     };
 
-    Token tokenPALRESERVADA(char* palabra);
+    Token tokenPalabraReservada(char* palabra);
 %}
 
 
 DIGITO      [0-9]
-PALRES      alternative|big|evaluate|instead|large|loop|make|number|other|real|repeat|select|small|step|stop|symbol|throw
 LETRA       [a-zA-Z]
+PALRES      "alternative"|"big"|"evaluate"|"instead"|"large"|"loop"|"make"|"number"|"other"|"real"|"repeat"|"select"|"small"|"step"|"stop"|"symbol"|"throw"
 ESPACIO     [" "]
 GUION       [-_]
 
 /* Clase 1 */
-IDENT       $[LETRA]+
+IDENT       ${LETRA}+
 
 /* Clase 2 */
-DECIMAL     [1-9](DIGITO)*;
-OCTAL       (O-o)[0-7]*;
-ENTERO      (DECIMAL|OCTAL);
+DECIMAL     [1-9]{DIGITO}*
+OCTAL       [Oo][0-7]*
+ENTERO      {DECIMAL}|{OCTAL}
 
 /* Clase 3 */
-REAL        (DECIMAL)+[.](DIGITO)+;
+REAL        {DECIMAL}+[.]{DIGITO}+
 
 /* Clase 4 */
-CARACTER    ([LETRA]|"!"|"""|"#"|"$"|"%"|"&"|"/"|"("|")"|"="|"?"|"¡"|"/"|"*"|"-"|"+"|"¬"|">"|"<"|"¿"|"¬"|"°"|"@");
-COMILLAS    (""");
-COMILLA     ("'");
-CADENAS     (([COMILLAS][CARACTER]+[COMILLAS]")|([COMILLA][CARACTER][COMILLA]));
+CARACTER    '[{LETRA}!"#$%&/|=?¡/*-+¬><¿¬°@]'
+CADENAS     "[{LETRA}!"#$%&/|=?¡/*-+¬><¿¬°@]+"
 
 
 /* Clase 5 */
@@ -81,23 +79,35 @@ SIMESPECIAL    ("["|"]"|"("|")"|"{"|"}"|","|":"|";");
 /* Clase 6 */
 OPARIMETICOS    ("+"|"-"|"*"|"/"|"%"|"\"|"^");
 
+/* Clase 7 */
+OPRELACIONALES  ("<"|">"|"<="|">="|"=="|"!=");
 
 /* Clase 8 */
 OPASIGNACION    ("=");
 
 %%
 
-{IDENT}    fprintf(archSal, "Es un identificador: %s", yytext);
-{PALRES}   printf("%s", yytext);
+{IDENT}    printf("Es un identificador: %s", yytext);
+{PALRES}   {Token a = tokenPalabraReservada(yytext); fprintf(archSal, "(%i, %i)", a.class, a.val);}
 
 %%
 
 int main (int argc, char *argv[]) {
     
-    yyin = fopen(argv[1],"r");
-    archSal = fopen("Salida.txt","w");
-    yylex();
-    fclose(archSal);
+    if ( (yyin = fopen(argv[1], "rt")) == NULL ) {
+        printf("No se pudo abrir el archivo de entrada.\n");
+        return 1;
+    } else {
+
+        if ( (archSal = fopen("Salida.txt","w")) == NULL ) {
+            printf("No se pudo abrir el archivo de salida.\n");
+            return 1;
+        } else {
+            yylex();
+        }
+
+        fclose(archSal);
+    }
 
     return 0;
 }
@@ -113,15 +123,14 @@ Token tokenPalabraReservada( char* palabra ) {
     for (int i = 0; i < (*(&PALRESERVADAS + 1) - PALRESERVADAS); i++) {
 
         if ( !strcmp(palabra, PALRESERVADAS[i].atom) ) {
-            printf("Es una palabra reservada: %s", palabra);
             aux.class = 0;
-            aux.atom = (char)i;
+            aux.val = i;
             return aux;
         }
     }
 
     // No es palabra reservada
     aux.class = -1;
-    aux.atom = -1;
+    aux.val = -1;
     return aux;
 }
