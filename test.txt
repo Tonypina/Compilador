@@ -1,8 +1,6 @@
 alternative
 throw
-$identificador
-$otro
-$otro2
+$identificador $otro
 8
 198
 O32

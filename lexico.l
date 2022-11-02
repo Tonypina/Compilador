@@ -105,16 +105,16 @@ OPASIGNACION    [=]
 
 %%
 
-{PALRES}         {a = tokenPalabraReservada(yytext); fprintf(archSal, "(%i, %i)\n", a.class, a.val);}
-{IDENT}          {a = tokenIdentificadores(yytext); fprintf(archSal, "(%i, %i)\n", a.class, a.val);}
-{ENTERO}         {a = tokenConstantesNumericas(yytext); fprintf(archSal, "(%i, %i)\n", a.class, a.val);}
-{REAL}           {a = tokenConstantesReales(yytext); fprintf(archSal, "(%i, %i)\n", a.class, a.val);}
-{CADENAS}        {a = tokenConstantesCadenas(yytext), fprintf(archSal, "(%i, %i)\n", a.class, a.val);}
-{CARACTER}       {a = tokenConstantesCadenas(yytext), fprintf(archSal, "(%i, %i)\n", a.class, a.val);}
-{SIMESPECIAL}    {a = tokenSimbolosEspeciales(yytext); fprintf(archSal, "(%i, %i)\n", a.class, a.val);}
-{OPARITMETICOS}  {a = tokenOperadoresAritmeticos(yytext); fprintf(archSal, "(%i, %i)\n", a.class, a.val);}
-{OPRELACIONALES} {a = tokenOperadoresRelacionales(yytext); fprintf(archSal, "(%i, %i)\n", a.class, a.val);}
-{OPASIGNACION}   {a = tokenOperadorAsignacion(yytext); fprintf(archSal, "(%i, %i)\n", a.class, a.val);}
+{PALRES}         {a = tokenPalabraReservada(strdup(yytext)); fprintf(archSal, "(%i, %i)\n", a.class, a.val);}
+{IDENT}          {a = tokenIdentificadores(strdup(yytext)); fprintf(archSal, "(%i, %i)\n", a.class, a.val);}
+{ENTERO}         {a = tokenConstantesNumericas(strdup(yytext)); fprintf(archSal, "(%i, %i)\n", a.class, a.val);}
+{REAL}           {a = tokenConstantesReales(strdup(yytext)); fprintf(archSal, "(%i, %i)\n", a.class, a.val);}
+{CADENAS}        {a = tokenConstantesCadenas(strdup(yytext)), fprintf(archSal, "(%i, %i)\n", a.class, a.val);}
+{CARACTER}       {a = tokenConstantesCadenas(strdup(yytext)), fprintf(archSal, "(%i, %i)\n", a.class, a.val);}
+{SIMESPECIAL}    {a = tokenSimbolosEspeciales(strdup(yytext)); fprintf(archSal, "(%i, %i)\n", a.class, a.val);}
+{OPARITMETICOS}  {a = tokenOperadoresAritmeticos(strdup(yytext)); fprintf(archSal, "(%i, %i)\n", a.class, a.val);}
+{OPRELACIONALES} {a = tokenOperadoresRelacionales(strdup(yytext)); fprintf(archSal, "(%i, %i)\n", a.class, a.val);}
+{OPASIGNACION}   {a = tokenOperadorAsignacion(strdup(yytext)); fprintf(archSal, "(%i, %i)\n", a.class, a.val);}
 
 "{"[^}\n]*"}"     /* Excluye una linea de comentarios */
 [ \t\n] {;}       /* Excluye los espacios en blanco */
@@ -181,12 +181,6 @@ void imprimirTablas() {
     SLL_Print(TABLA_OPRELACIONALES, archSal);
 }
 
-char* recortarCadena( char* s ) {
-    char* s_out;
-    s_out = strtok(s, " \n\t");
-    return s_out;
-}
-
 Token tokenPalabraReservada( char* palabra ) {
 
     Token aux;
@@ -206,7 +200,6 @@ Token tokenPalabraReservada( char* palabra ) {
 Token tokenIdentificadores( char* id ) {
 
     Token token_aux;
-    char* str_token = recortarCadena(id);
 
     if (SLL_Search(TABLA_IDENTIFICADORES, id)) {
 
@@ -215,9 +208,9 @@ Token tokenIdentificadores( char* id ) {
         return token_aux;
     }
 
-    SLL_Insert_back(TABLA_IDENTIFICADORES, SLL_Len(TABLA_IDENTIFICADORES), str_token, -1);
     token_aux.class = 1;
-    token_aux.val = SLL_Len(TABLA_IDENTIFICADORES)-1;
+    token_aux.val = SLL_Len(TABLA_IDENTIFICADORES);
+    SLL_Insert_back(TABLA_IDENTIFICADORES, SLL_Len(TABLA_IDENTIFICADORES), id, -1);
 
     return token_aux;
 }
@@ -226,9 +219,9 @@ Token tokenConstantesNumericas( char* cte ) {
 
     Token token_aux;
 
-    SLL_Insert_back(TABLA_CTESNUMERICAS, SLL_Len(TABLA_CTESNUMERICAS), recortarCadena(cte), 1);
     token_aux.class = 2;
-    token_aux.val = SLL_Len(TABLA_CTESNUMERICAS)-1;
+    token_aux.val = SLL_Len(TABLA_CTESNUMERICAS);
+    SLL_Insert_back(TABLA_CTESNUMERICAS, SLL_Len(TABLA_CTESNUMERICAS), cte, -1);
 
     return token_aux;
 }
@@ -237,9 +230,9 @@ Token tokenConstantesReales( char* cte ) {
 
     Token token_aux;
 
-    SLL_Insert_back(TABLA_CTESREALES, SLL_Len(TABLA_CTESREALES), recortarCadena(cte), -1);
     token_aux.class = 3;
-    token_aux.val = SLL_Len(TABLA_CTESREALES)-1;
+    token_aux.val = SLL_Len(TABLA_CTESREALES);
+    SLL_Insert_back(TABLA_CTESREALES, SLL_Len(TABLA_CTESREALES), cte, -1);
 
     return token_aux;
 }
@@ -248,9 +241,9 @@ Token tokenConstantesCadenas( char* cte ) {
 
     Token token_aux;
 
-    SLL_Insert_back(TABLA_CTESCADENAS, SLL_Len(TABLA_CTESCADENAS), cte, -1);
     token_aux.class = 4;
-    token_aux.val = SLL_Len(TABLA_CTESCADENAS)-1;
+    token_aux.val = SLL_Len(TABLA_CTESCADENAS);
+    SLL_Insert_back(TABLA_CTESCADENAS, SLL_Len(TABLA_CTESCADENAS), cte, -1);
 
     return token_aux;
 }
