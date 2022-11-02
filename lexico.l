@@ -69,6 +69,8 @@
     Token tokenConstantesNumericas(char* cte);
     Token tokenConstantesReales(char* cte);
     Token tokenSimbolosEspeciales(char* s);
+    Token tokenOperadoresAritmeticos(char* s);
+    Token tokenOperadoresRelacionales( char* s )
 %}
 
 
@@ -98,21 +100,24 @@ CADENAS     "[{LETRA}!"#$%&/|=?¡/*-+¬><¿¬°@]+"
 SIMESPECIAL    "["|"]"|"("|")"|"{"|"}"|","|":"|";"
 
 /* Clase 6 */
-OPARIMETICOS    ("+"|"-"|"*"|"/"|"%"|"\"|"^");
+OPARIMETICOS    "+"|"-"|"*"|"/"|"%"|"\"|"^"
 
 /* Clase 7 */
-OPRELACIONALES  ("<"|">"|"<="|">="|"=="|"!=");
+OPRELACIONALES  "<"|">"|"<="|">="|"=="|"!="
 
 /* Clase 8 */
-OPASIGNACION    ("=");
+OPASIGNACION    [=]
 
 %%
 
-{PALRES}        {a = tokenPalabraReservada(yytext); fprintf(archSal, "(%i, %i)\n", a.class, a.val);}
-{IDENT}         {a = tokenIdentificadores(yytext); fprintf(archSal, "(%i, %i)\n", a.class, a.val);}
-{ENTERO}        {a = tokenConstantesNumericas(yytext); fprintf(archSal, "(%i, %i)\n", a.class, a.val);}
-{REAL}          {a = tokenConstantesReales(yytext); fprintf(archSal, "(%i, %i)\n", a.class, a.val);}
-{SIMESPECIAL}   {a = tokenSimbolosEspeciales(yytext); fprintf(archSal, "(%i, %i)\n", a.class, a.val);}
+{PALRES}         {a = tokenPalabraReservada(yytext); fprintf(archSal, "(%i, %i)\n", a.class, a.val);}
+{IDENT}          {a = tokenIdentificadores(yytext); fprintf(archSal, "(%i, %i)\n", a.class, a.val);}
+{ENTERO}         {a = tokenConstantesNumericas(yytext); fprintf(archSal, "(%i, %i)\n", a.class, a.val);}
+{REAL}           {a = tokenConstantesReales(yytext); fprintf(archSal, "(%i, %i)\n", a.class, a.val);}
+{SIMESPECIAL}    {a = tokenSimbolosEspeciales(yytext); fprintf(archSal, "(%i, %i)\n", a.class, a.val);}
+{OPARITMETICOS}  {a = tokenOperadoresAritmeticos(yytext); fprintf(archSal, "(%i, %i)\n", a.class, a.val);}
+{OPRELACIONALES} {a = tokenOperadoresRelacionales(yytext); fprintf(archSal, "(%i, %i)\n", a.class, a.val);}
+{OPASIGNACION}   {a = tokenOperadorAsignacion(yytext); fprintf(archSal, "(%i, %i)\n", a.class, a.val);}
 
 %%
 
@@ -248,3 +253,40 @@ Token tokenSimbolosEspeciales( char* s ) {
     return token_aux;
 }
 
+Token tokenOperadoresAritmeticos( char* s ) {
+
+    Token token_aux;
+
+    token_aux.class = 6;
+    token_aux.val = s[0] + 0;
+
+    return token_aux;
+}
+
+Token tokenOperadoresRelacionales( char* s ) {
+
+    Token aux;
+
+    for (int i = 0; i < (*(&TABLA_OPRELACIONALES + 1) - TABLA_OPRELACIONALES); i++) {
+
+        if ( !strcmp(palabra, TABLA_OPRELACIONALES[i].atom) ) {
+            aux.class = 7;
+            aux.val = i;
+            return aux;
+        }
+    }
+
+    // No es operador
+    printf("Error léxico.\n");
+    return aux;
+}
+
+Token tokenOperadorAsignacion( char* s ) {
+
+    Token token_aux;
+
+    token_aux.class = 8;
+    token_aux.val = s[0] + 0;
+
+    return token_aux;
+}
