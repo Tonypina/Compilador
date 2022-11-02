@@ -2,6 +2,9 @@
     // Código en C
     #include <stdio.h>
     #include <string.h>
+
+    #define MAX_IDENTIFICADORES 1000
+
     FILE *yyin;
     FILE *archSal;
 
@@ -10,14 +13,21 @@
         char* atom;
     } Tupla;
 
+    typedef struct Id {
+        int pos;
+        char* name;
+        int type;
+    } Id;
+
     typedef struct Token {
         int class;
         int val;
     } Token;
     
+    Token a;
     /* Clase 0 */
     /* Estructura para definir palabras reservadas {palabra,valor} */
-    Tupla PALRESERVADAS[] = {
+    Tupla TABLA_PALRESERVADAS[] = {
         {0, "alternative"},
         {1, "big"},
         {2, "evaluate"},
@@ -38,7 +48,7 @@
     };
 
     /* Clase 7 */
-    Tupla OPRELACIONALES[] = {
+    Tupla TABLA_OPRELACIONALES[] = {
         {0, "<"},
         {1, ">"},
         {2, "<="},
@@ -47,7 +57,10 @@
         {5, "!="}
     };
 
+    Id TABLA_IDENTIFICADORES[MAX_IDENTIFICADORES] = {-1, 0, 0};
+
     Token tokenPalabraReservada(char* palabra);
+    Token tokenIdentificadores(char* id);
 %}
 
 
@@ -87,8 +100,8 @@ OPASIGNACION    ("=");
 
 %%
 
-{IDENT}    printf("Es un identificador: %s", yytext);
-{PALRES}   {Token a = tokenPalabraReservada(yytext); fprintf(archSal, "(%i, %i)", a.class, a.val);}
+{IDENT}    {a = tokenIdentificadores(yytext); fprintf(archSal, "(%i, %i)\n", a.class, a.val);}
+{PALRES}   {a = tokenPalabraReservada(yytext); fprintf(archSal, "(%i, %i)\n", a.class, a.val);}
 
 %%
 
@@ -107,22 +120,20 @@ int main (int argc, char *argv[]) {
         }
 
         fclose(archSal);
+        fclose(yyin);
     }
 
     return 0;
 }
 
-Token crearToken( char* palabra, const int TIPO ) {
-
-}
 
 Token tokenPalabraReservada( char* palabra ) {
 
     Token aux;
 
-    for (int i = 0; i < (*(&PALRESERVADAS + 1) - PALRESERVADAS); i++) {
+    for (int i = 0; i < (*(&TABLA_PALRESERVADAS + 1) - TABLA_PALRESERVADAS); i++) {
 
-        if ( !strcmp(palabra, PALRESERVADAS[i].atom) ) {
+        if ( !strcmp(palabra, TABLA_PALRESERVADAS[i].atom) ) {
             aux.class = 0;
             aux.val = i;
             return aux;
@@ -130,7 +141,41 @@ Token tokenPalabraReservada( char* palabra ) {
     }
 
     // No es palabra reservada
-    aux.class = -1;
-    aux.val = -1;
+    printf("Error léxico.\n");
     return aux;
+}
+
+Token tokenIdentificadores( char* id ) {
+
+    Token token_aux;
+    Id id_aux;
+
+    int ultimo;
+
+    for ( int i = 0; i < MAX_IDENTIFICADORES; i++ ) {
+        
+        if ( TABLA_IDENTIFICADORES[i].pos == -1 ) {
+            ultimo = i;
+            break;
+        }
+
+        if ( !strcmp(id, TABLA_IDENTIFICADORES[i].name) ) {
+
+            token_aux.class = -1;
+            token_aux.val = -1;
+
+            return token_aux; // Ya existe el id
+        }
+    }
+    
+    id_aux.pos = ultimo;
+    id_aux.name = id;
+    id_aux.type = -1;
+
+    TABLA_IDENTIFICADORES[ultimo] = id_aux;
+
+    token_aux.class = 1;
+    token_aux.val = ultimo;
+
+    return token_aux;
 }
