@@ -4,6 +4,7 @@
     #include <string.h>
     FILE *archEnt;
     FILE *archSal;
+%}
 
     typedef struct Tupla {
         int val;
@@ -15,6 +16,8 @@
         char atom;
     } Token;
     
+    
+%%
     /* Clase 0 */
     /* Estructura para definir palabras reservadas {palabra,valor} */
     Tupla PALRESERVADAS[] = {
@@ -36,19 +39,7 @@
         {15, "symbol"},
         {16, "throw"}
     };
-
-    /* Clase 7 */
-    Tupla OPRELACIONALES[] = {
-        {0, "<"},
-        {1, ">"},
-        {2, "<="},
-        {3, ">="},
-        {4, "=="},
-        {5, "!="}
-    };
-
     Token tokenPALRESERVADA(char* palabra);
-%}
 
 
 DIGITO      [0-9]
@@ -56,6 +47,7 @@ PALRES      alternative|big|evaluate|instead|large|loop|make|number|other|real|r
 LETRA       [a-zA-Z]
 ESPACIO     [" "]
 GUION       [-_]
+
 
 /* Clase 1 */
 IDENT       $[LETRA]+;
@@ -74,7 +66,6 @@ COMILLAS    (""");
 COMILLA     ("'");
 CADENAS     (([COMILLAS][CARACTER]+[COMILLAS]")|([COMILLA][CARACTER][COMILLA]));
 
-
 /* Clase 5 */
 SIMESPECIAL    ("["|"]"|"("|")"|"{"|"}"|","|":"|";");
 
@@ -85,38 +76,22 @@ OPARIMETICOS    ("+"|"-"|"*"|"/"|"%"|"\"|"^");
 /* Clase 8 */
 OPASIGNACION    ("=");
 
+/* Clase 7 */
+    Tupla OPRELACIONALES[] = {
+        {0, "<"},
+        {1, ">"},
+        {2, "<="},
+        {3, ">="},
+        {4, "=="},
+        {5, "!="}
+    };
+
+
 %%
-
-{PALRES}   printf("%s", yytext);
-
-%%
-
 int main (int argc, char *argv[]) {
     
     yyin = fopen(argv[1],"r");
     archSal = fopen("Salida.txt","w");
     yylex();
     fclose(archEnt);
-
-    return 0;
-}
-
-Token tokenPalabraReservada( char* palabra ) {
-
-    Token aux;
-
-    for (int i = 0; i < (*(&PALRESERVADAS + 1) - PALRESERVADAS); i++) {
-
-        if ( !strcmp(palabra, PALRESERVADAS[i].atom) ) {
-            printf("Es una palabra reservada: %s", palabra);
-            aux.class = 0;
-            aux.val = (char)i;
-            return aux;
-        }
-    }
-
-    // No es palabra reservada
-    aux.class = -1;
-    aux.val = -1;
-    return aux;
 }
