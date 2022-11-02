@@ -199,7 +199,7 @@ Token tokenPalabraReservada( char* palabra ) {
     }
 
     // No es palabra reservada
-    printf("Error léxico.\n");
+    printf("No es una palabra reservada.\n");
     return aux;
 }
 
@@ -208,14 +208,12 @@ Token tokenIdentificadores( char* id ) {
     Token token_aux;
     char* str_token = recortarCadena(id);
 
-    if (SLL_Search(TABLA_IDENTIFICADORES, str_token)) {
+    if (SLL_Search(TABLA_IDENTIFICADORES, id)) {
 
         printf("Identificador Repetido.");
 
         return token_aux;
     }
-
-    fprintf(archSal, "Token: %s", str_token);
 
     SLL_Insert_back(TABLA_IDENTIFICADORES, SLL_Len(TABLA_IDENTIFICADORES), str_token, -1);
     token_aux.class = 1;
