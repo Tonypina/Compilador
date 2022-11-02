@@ -38,19 +38,19 @@
 
 /* Estructura para definir palabras reservadas {palabra,valor,atomo} */
 DIGITO      [0-9]
-ENTERO      {DIGITO}+
 LETRA       [a-zA-Z]
 ESPACIO     [" "]
 GUION       [-_]
 
 /* Clase 0 */
-PALRES      alternative|big|evaluate|instead|large|loop|make|number|other|real|repeat|select|small|step|stop|symbol|throw
 
 /* Clase 1 */
 IDENT       $[LETRA]+;
 
 /* Clase 2 */
-/* ENTERO  */
+DECIMAL     [1-9][0-9]*;
+OCTAL       (O-o)[0-7]*;
+ENTERO      (DECIMAL|OCTAL);
 
 /* Clase 3 */
 
@@ -64,9 +64,45 @@ IDENT       $[LETRA]+;
 
 /* Clase 8 */
 
+/* Palabras reservadas */
+
+ALTERNATIVE "alternative"
+BIG         "big"
+EVALUATE    "evaluate"
+INSTEAD     "instead"
+LARGE       "large"
+LOOP        "loop"
+MAKE        "make"
+NUMBER      "number"
+OTHER       "other"
+REAL        "real"
+REPEAT      "repeat"
+SELECT      "select"
+SMALL       "small"
+STEP        "step"
+STOP        "stop"
+SYMBOL      "symbol"
+THROW       "throw"
+
 %%
 
-{PARLES}   {tokenPalabraReservada(yytext);}
+{ALTERNATIVE}   {tokenPalabraReservada(yytext);}
+{BIG}           {tokenPalabraReservada(yytext);}
+{EVALUATE}      {tokenPalabraReservada(yytext);}
+{INSTEAD}       {tokenPalabraReservada(yytext);}
+{LARGE}         {tokenPalabraReservada(yytext);}
+{LOOP}          {tokenPalabraReservada(yytext);}
+{MAKE}          {tokenPalabraReservada(yytext);}
+{NUMBER}        {tokenPalabraReservada(yytext);}
+{OTHER}         {tokenPalabraReservada(yytext);}
+{REAL}          {tokenPalabraReservada(yytext);}
+{REPEAT}        {tokenPalabraReservada(yytext);}
+{SELECT}        {tokenPalabraReservada(yytext);}
+{SMALL}         {tokenPalabraReservada(yytext);}
+{STEP}          {tokenPalabraReservada(yytext);}
+{STOP}          {tokenPalabraReservada(yytext);}
+{SYMBOL}        {tokenPalabraReservada(yytext);}
+{THROW}         {tokenPalabraReservada(yytext);}
 
 %%
 
@@ -77,9 +113,6 @@ Token tokenPalabraReservada( char* palabra ) {
         if ( !strcmp(palabra, palabrasReservadas[i].str) )
             return {0, (char)i};
     }
-
-    // No es palabra reservada
-    return {-1, -1};
 }
 
 int main (int argc, char *argv[]) {
