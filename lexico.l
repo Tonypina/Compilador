@@ -95,11 +95,11 @@ ESPACIO     [" "]
 GUION       [-_]
 
 /* Clase 1 */
-IDENT       \${LETRA}+{DIGITO}*
+IDENT       \${LETRA}+
 
 /* Clase 2 */
 DECIMAL     [1-9]{DIGITO}*
-OCTAL       [Oo][0-7]*
+OCTAL       [Oo][0-7]+
 ENTERO      {DECIMAL}|{OCTAL}
 
 /* Clase 3 */
