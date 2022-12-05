@@ -1,5 +1,5 @@
 
-/* Fecha: 02 / 11 / 2022 */
+/* Fecha: 06 / 12 / 2022 */
 
 /* El programa realiza un análisis léxico para un lenguaje definido     */
 /* anteriormente, es decir, servirá de primera parte para el compilador */
