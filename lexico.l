@@ -183,6 +183,7 @@ int main (int argc, char *argv[]) {
     // Liberación de memoria
     SLL_Delete(&TABLA_PALRESERVADAS);
     SLL_Delete(&TABLA_IDENTIFICADORES);
+    SLL_Delete(&TABLA_CTESENTERAS);
     SLL_Delete(&TABLA_CTESNUMERICAS);
     SLL_Delete(&TABLA_CTESREALES);
     SLL_Delete(&TABLA_CTESCADENAS);
@@ -201,6 +202,8 @@ void imprimirTablas() {
     fprintf(archSal, "\n-------Tabla de Palabras Identificadores--------\n");
     SLL_Print(TABLA_IDENTIFICADORES, archSal);
     fprintf(archSal, "\n-------Tabla de Constantes Enteras--------\n");
+    SLL_Print(TABLA_CTESNUMERICAS, archSal);
+    fprintf(archSal, "\n-------Tabla de Constantes Numericas--------\n");
     SLL_Print(TABLA_CTESNUMERICAS, archSal);
     fprintf(archSal, "\n-------Tabla de Constantes Reales--------\n");
     SLL_Print(TABLA_CTESREALES, archSal);
@@ -247,6 +250,18 @@ Token tokenIdentificadores( char* id ) {
     token_aux.class = 1;
     token_aux.val = SLL_Len(TABLA_IDENTIFICADORES);
     SLL_Insert_back(TABLA_IDENTIFICADORES, SLL_Len(TABLA_IDENTIFICADORES), id, -1);
+
+    return token_aux;
+}
+
+/* Genera token de constantes enteras */
+Token tokenConstantesNumericas( char* cte ) {
+
+    Token token_aux;
+
+    token_aux.class = 2;
+    token_aux.val = SLL_Len(TABLA_CTESENTERAS);
+    SLL_Insert_back(TABLA_CTESENTERAS, SLL_Len(TABLA_CTESENTERAS), cte, -1);
 
     return token_aux;
 }
