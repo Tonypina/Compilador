@@ -124,7 +124,7 @@ OPASIGNACION    [=]
 
 
 /*Conjuntos de seleccion*/
-C.S.(1)={bg#yx}
+/*C.S.(1)={bg#yx}
 C.S.(2)={bg#yx}
 C.S.(3)={-|}
 C.S.(4)={bg#yx}
@@ -224,7 +224,790 @@ C.S.(97)={[}
 C.S.(98)={)}
 C.S.(99)={inrs}
 C.S.(100)={,}
-C.S.(101)={)}
+C.S.(101)={)}*/
+
+/*Definición de expresiones regulares para componentes léxicos*/
+
+/*1*/
+void Program(){
+  if(c=='b'||c=='g'||c=='#'||c=='y'||c=='x'){
+    Func();
+    OtraFunc();
+    return;
+  } else {
+    error();
+  }
+}
+
+/*2 - 3*/
+void OtraFunc(){
+  if(c=='b'||c=='g'||c=='#'||c=='y'||c=='x'){
+    Func();
+    OtraFunc();
+    return;
+  } elsif(c='-'||c='|'){
+    return;
+  } else {
+    error();
+  }
+}
+
+/*4*/
+void Func(){
+  if(c=='b'||c=='g'||c=='#'||c=='y'||c=='x'){
+    Tipo();
+    if(c=='i'){
+      c=getchar();
+    } else {
+      error;
+    }
+    if (c=='('){
+      c=getchar();
+      Param();
+        if (c==')'){
+          c=getchar();
+        } else{
+          error();
+        }
+    } else{
+      error();
+    }
+
+    if (c=='{'){
+      c=getchar();
+      Cuerpo();
+        if (c=='}'){
+          c=getchar();
+        } else{
+          error();
+        }
+    } else{
+      error();
+    }
+    return;
+  } else {
+    error();
+  }
+}
+
+/*5 - 6*/
+void Param(){
+  if(c=='b'||c=='g'||c=='#'||c=='y'||c=='x'){
+    Tipo();
+    if (c=='i'){
+      c=getchar();
+    } else{
+      error();
+    }
+    OtroParam();
+    return;
+  } elsif(c=')'){
+    return;
+  } else {
+    error();
+  }
+}
+
+
+/*7 - 8*/
+void Param(){
+  if(c==','){
+    Tipo();
+    if (c=='i'){
+      c=getchar();
+    } else{
+      error();
+    }
+    OtroParam();
+    return;
+  } elsif(c=')'){
+    return;
+  } else {
+    error();
+  }
+}
+
+/*9*/
+void Cuerpo(){
+  if(c=='i'||c='}'||c='b'||c='g'||c='#'||c='y'||c='x'||c='c'||c='w'||c='f'||c='j'||c='h'||c='z'||c='['){
+    Decl();
+    ListaP();
+    return;
+  } else {
+    error();
+  }
+}
+
+/*10 - 11*/
+void Cuerpo(){
+  if(c=='{'||c='i'||c='}'||c='c'||c='w'||c='f'||c='j'||c='h'||c='z'||c='['){
+    Decl();
+    ListaP();
+    return;
+  } elsif(c=='b'||c=='g'||c=='#'||c=='y'||c=='x'){
+    return;
+  } else {
+    error();
+  }
+}
+
+
+/*12*/
+void D(){
+  if(c=='b'||c=='g'||c=='#'||c=='y'||c=='x'){
+    Tipo();
+    return;
+  } else {
+    error();
+  }
+}
+
+/*13 - 17*/
+void Tipo(){
+  if(c=='b'||c=='g'||c=='#'||c=='y'||c=='x'){
+    c=getchar();
+    return;
+  } else {
+    error();
+  }
+}
+
+/*18*/
+void K(){
+  if(c=='i'){
+    c=getchar();
+    Q();
+    return;
+  } else {
+    error();
+  }
+}
+
+/*19 - 21*/
+void Q(){
+  if(c==';'){
+    return;
+  } elsif(c=='=') {
+    c=getchar();
+    N();
+    C();
+    return;
+  } elsif(c==',') {
+    c=getchar();
+    K();
+    return;
+  } else{
+    error();
+  }
+}
+
+/*22 - 24*/
+void N(){
+  if(c=='n'||c=='r'||c=='s'){
+    c=getchar();
+    return;
+  } else{
+    error();
+  }
+}
+
+/*25 - 26*/
+void C(){
+  if(c==';'){
+    return;
+  } elsif(c==',') {
+    c=getchar();
+    K();
+    return;
+  } else{
+    error();
+  }
+}
+
+/*27*/
+void A(){
+  if(c=='i'){
+    c=getchar();
+    if(c=='='){
+      c=getchar();
+      AP();
+    } else{
+      error();
+    }
+    return;
+  } else{
+    error();
+  }
+}
+
+/*28 - 29*/
+void AP(){
+  if(c=='s'){
+    c=getchar();
+    return;
+  } elsif(c=='i'||c=='n'||c='r'||c='[') {
+    E();
+    return;
+  } else{
+    error();
+  }
+}
+
+/*30*/
+void E(){
+  if(c=='i'||c=='n'||c='r'||c='['){
+    T();
+    EP();
+    return;
+  } else{
+    error();
+  }
+}
+
+/*31 - 33*/
+void EP(){
+  if(c=='+'||c=='-'){
+    c=getchar();
+    T();
+    EP();
+    return;
+  } elsif (c==';'||c==')'){
+    return;
+  } else{
+    error();
+  }
+}
+
+/*34*/
+void T(){
+  if(c=='i'||c=='n'||c='r'||c='['){
+    F();
+    TP();
+    return;
+  } else{
+    error();
+  }
+}
+
+/*35 - 40*/
+void TP(){
+  if(c=='*'||c=='/'||c='\'||c='%'||c='^'){
+    c=getchar();
+    F();
+    TP();
+    return;
+  } elsif (c==';'||c==')'||c='+'||c='-'){
+    return;
+  } else{
+    error();
+  }
+}
+
+
+/*41 - 44*/
+void F(){
+  if(c=='('){
+    c=getchar();
+    E();
+    if(c==')'){
+      c==getchar();
+    } else {
+      error();
+  return;
+  } elsif (c=='i'||c=='n'||c='r'){
+    c=getchar();
+    return;
+  } elsif (c='['){
+    Llama();
+    return;
+  } else{
+    error();
+  }
+}
+
+/*46 - 49*/
+void R(){
+  if(c=='i'){
+    c=getchar();
+    RP();
+    V();
+    return;
+  } elsif (c=='n'){
+    c=getchar();
+    RP();
+    VP();
+    return;
+  } elsif (c='r'){
+    c=getchar();
+    RP();
+    VPP();
+    return;
+  } elsif (c='s'){
+    c=getchar();
+    RP();
+    VPPP();
+    return;
+  } else{
+    error();
+  }
+}
+
+/*50 - 55*/
+void RP(){
+  if (c=='>'||c=='<'||c='l'||c='e'||c='d'||c='u'){
+    c=getchar();
+    return;
+  } else{
+    error();
+  }
+}
+
+/*56 - 59*/
+void V(){
+  if (c=='i'||c=='n'||c='r'||c='s'){
+    c=getchar();
+    return;
+  } else{
+    error();
+  }
+}
+
+/*60 - 61*/
+void VP(){
+  if (c=='i'||c=='n'){
+    c=getchar();
+    return;
+  } else{
+    error();
+  }
+}
+
+/*62 - 63*/
+void V(){
+  if (c=='i'||c='r'){
+    c=getchar();
+    return;
+  } else{
+    error();
+  }
+}
+
+/*64 - 65*/
+void V(){
+  if (c=='i'||c='s'){
+    c=getchar();
+    return;
+  } else{
+    error();
+  }
+}
+
+/*66 - 73*/
+void V(){
+  if (c=='i'){
+    A();
+    return;
+  } elsif(c=='f'){
+    I();
+    return;
+  } elsif(c=='h'){
+    H();
+    return;
+  } elsif(c=='w'){
+    W();
+    return;
+  } elsif(c=='j'){
+    J();
+    return;
+  } elsif(c=='['){
+    Llama();
+    return;
+  } elsif(c=='z'){
+    Devuelve();
+    return;
+  } elsif(c=='c'){
+    c=getchar();
+    if(c==';'){
+      c=getchar();
+      return;
+    } else{
+      error();
+    }
+  return;
+  } else{
+    error();
+  }
+}
+
+/*74 - 75*/
+void ListaP(){
+  if (c=='}'||c==':'||c=='t'||c=='a'||c=='o'||c=='q'){
+    return;
+  } elsif(c=='i'||c=='c'||c=='w'||c=='f'||c=='j'||c=='h'||c=='z'||c=='['){
+    P();
+    ListaP();
+    return;
+  } else{
+    error();
+  }
+}
+
+/*76*/
+void W(){
+  if (c=='w'){
+    c=getchar();
+    if (c=='('){
+      c=getchar();
+      R();
+        if (c==')'){
+          c=getchar();
+        } else{
+          error();
+        }
+    } else{
+      error();
+    }
+    if (c=='m'){
+      c=getchar();
+    } else{
+      error();
+    }
+    if (c=='{'){
+      c=getchar();
+      ListaP();
+        if (c=='}'){
+          c=getchar();
+        } else{
+          error();
+        }
+    } else{
+      error();
+    }
+    return;
+  } else{
+    error();
+  }
+}
+
+/*77*/
+void I(){
+  if (c=='w'){
+    c=getchar();
+    if (c=='('){
+      c=getchar();
+      R();
+        if (c==')'){
+          c=getchar();
+        } else{
+          error();
+        }
+    } else{
+      error();
+    }
+    if (c=='m'){
+      c=getchar();
+    } else{
+      error();
+    }
+    if (c=='{'){
+      c=getchar();
+      ListaP();
+        if (c=='}'){
+          c=getchar();
+        } else{
+          error();
+        }
+    } else{
+      error();
+    }
+    return;
+  } else{
+    error();
+  }
+}
+
+
+/*78 - 79*/
+void IP(){
+  if(c=='t'){
+    c=getchar();
+    ListaP();
+    return;
+  } elsif(c==':'){
+    return;
+  } else {
+    error();
+  }
+}
+
+/*80*/
+void J(){
+  if(c=='j'){
+    c=getchar();
+    if(c=='('){
+      c=getchar();
+    } else {
+      error
+    }
+    Y();
+    X();
+    Z();
+    if (c=='('){
+      c=getchar();
+      ListaP();
+        if (c==')'){
+          c=getchar();
+        } else{
+          error();
+        }
+    } else{
+      error();
+    }
+    return;
+  } else {
+    error();
+  }
+}
+
+/*81 - 82*/
+void Y(){
+  if(c=='i'){
+    c=getchar();
+    if(c=='='){
+      c=getchar();
+    } else {
+      error
+    }
+    E();
+    return;
+  } elsif (c==';') {
+    c=getchar();
+    return;
+  } else {
+    error();
+  }
+}
+
+/*83 - 84*/
+void X(){
+  if(c=='i'||c=='n'||c=='r'||c=='s'){
+    R();
+    return;
+  } elsif (c==';') {
+    c=getchar();
+    return;
+  } else {
+    error();
+  }
+}
+
+/*85 - 86*/
+void Z(){
+  if(c=='i'){
+    c=getchar();
+    if(c=='='){
+      c=getchar();
+    } else{
+      error();
+    }
+    E();
+    return;
+  } elsif (c==')') {
+    c=getchar();
+    return;
+  } else {
+    error();
+  }
+}
+
+/*87*/
+void H(){
+  if(c=='h'){
+    c=getchar();
+    if (c=='('){
+      c=getchar();
+      if (c=='i'){
+        c=getchar();
+      } else{
+        error();
+      }
+      if (c==')'){
+        c=getchar();
+      } else{
+        error();
+      }
+    } else{
+      error();
+    }
+    if (c=='{'){
+      c=getchar();
+      CP();
+      OP();
+      if (c=='}'){
+        c=getchar();
+      } else{
+        error();
+      }
+    } else{
+      error();
+    }
+    return;
+  } else {
+    error();
+  }
+}
+
+/*88 - 89*/
+void CP(){
+  if(c=='a'){
+    c=getchar();
+    if(c=='n'){
+      c=getchar();
+    } else{
+      error();
+    }
+    if(c==':'){
+      c=getchar();
+    } else{
+      error();
+    }
+    ListaP();
+    U();
+    CP();
+    return;
+  } elsif (c=='}'||c=='o') {
+    c=getchar();
+    return;
+  } else {
+    error();
+  }
+}
+
+/*90 - 91*/
+void OP(){
+  if(c=='o'){
+    c=getchar();
+    if(c==':'){
+      c=getchar();
+    } else{
+      error();
+    }
+    ListaP();
+    return;
+  } elsif (c=='}') {
+    return;
+  } else {
+    error();
+  }
+}
+
+/*92 - 93*/
+void U(){
+  if(c=='q'){
+    c=getchar();
+    return;
+  } elsif (c=='}'||c=='a'||c=='o') {
+    return;
+  } else {
+    error();
+  }
+}
+
+/*94*/
+void Devuelve(){
+  if(c=='z'){
+    c=getchar();
+    if (c=='('){
+      c=getchar();
+      Valor();
+      if (c==')'){
+        c=getchar();
+      } else{
+        error();
+      }
+    } else{
+      error();
+    }
+    if(c==;){
+      c=getchar();
+    } else{
+      error();
+    }
+    return;
+  } else {
+    error();
+  }
+}
+
+/*95 - 96*/
+void Valor(){
+  if(c=='i'||c=='n'||c=='r'||c=='s'){
+    V();
+    return;
+  } elsif (c==')') {
+    return;
+  } else {
+    error();
+  }
+}
+
+/*97*/
+void Llama(){
+  if(c=='['){
+    c=getchar();
+    if(c=='i'){
+      c==getchar();
+    } else {
+      error();
+    }
+    if (c=='('){
+      c=getchar();
+      Arg();
+      if (c==')'){
+        c=getchar();
+      } else{
+        error();
+      }
+    } else{
+      error();
+    }
+    if(c==']'){
+      c==getchar();
+    } else {
+      error();
+    }
+  return;
+  } else {
+    error();
+  }
+}
+
+/*98 - 99*/
+void Arg(){
+  if(c==')'){
+    return;
+    } elsif(c=='i'||c=='n'||c=='r'||c=='s'){
+      V();
+      otroArg();
+      return;
+  } else {
+    error();
+  }
+}
+
+/*100 - 101*/
+void otroArg(){
+  if(c==','){
+    c=getchar();
+    v();
+    otroArg();
+    return;
+    } elsif(c==')'){
+      return;
+  } else {
+    error();
+  }
+}
 
 
 %%
