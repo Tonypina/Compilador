@@ -228,6 +228,7 @@ C.S.(101)={)}*/
 
 /*Definición de expresiones regulares para componentes léxicos*/
 
+/*Funciones*/
 /*1*/
 void Program(){
   if(c=='b'||c=='g'||c=='#'||c=='y'||c=='x'){
@@ -351,7 +352,7 @@ void Cuerpo(){
   }
 }
 
-
+/*Sentencia Declarativa*/
 /*12*/
 void D(){
   if(c=='b'||c=='g'||c=='#'||c=='y'||c=='x'){
@@ -424,6 +425,8 @@ void C(){
   }
 }
 
+
+/*Sentencia de Asignacion*/
 /*27*/
 void A(){
   if(c=='i'){
@@ -453,6 +456,8 @@ void AP(){
   }
 }
 
+
+/*Expresion Aritmetica*/
 /*30*/
 void E(){
   if(c=='i'||c=='n'||c='r'||c='['){
@@ -525,6 +530,8 @@ void F(){
   }
 }
 
+
+/*Expresion Relacional*/
 /*46 - 49*/
 void R(){
   if(c=='i'){
@@ -602,6 +609,8 @@ void V(){
   }
 }
 
+
+/*Proposiciones*/
 /*66 - 73*/
 void V(){
   if (c=='i'){
@@ -639,6 +648,8 @@ void V(){
   }
 }
 
+
+/* Lista de 0 más proposiciones*/
 /*74 - 75*/
 void ListaP(){
   if (c=='}'||c==':'||c=='t'||c=='a'||c=='o'||c=='q'){
@@ -652,6 +663,8 @@ void ListaP(){
   }
 }
 
+
+/*Sentencia Loop*/
 /*76*/
 void W(){
   if (c=='w'){
@@ -689,6 +702,8 @@ void W(){
   }
 }
 
+
+/*Sentencia Evaluate*/
 /*77*/
 void I(){
   if (c=='w'){
@@ -740,6 +755,8 @@ void IP(){
   }
 }
 
+
+/*Sentencia Repeat*/
 /*80*/
 void J(){
   if(c=='j'){
@@ -820,6 +837,8 @@ void Z(){
   }
 }
 
+
+/*Sentencia Select*/
 /*87*/
 void H(){
   if(c=='h'){
@@ -913,6 +932,8 @@ void U(){
   }
 }
 
+
+/*Sentencia Throw*/
 /*94*/
 void Devuelve(){
   if(c=='z'){
@@ -951,6 +972,8 @@ void Valor(){
   }
 }
 
+
+/*Llama a una funcion*/
 /*97*/
 void Llama(){
   if(c=='['){
