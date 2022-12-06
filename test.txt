@@ -1,6 +1,7 @@
-alternative
+alternative nata
 throw
 $identificador $otro
+$otro
 8
 198
 O32
