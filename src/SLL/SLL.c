@@ -5,16 +5,16 @@
  * 
  * @param _pos Posición del nodo en la lista
  * @param _name Nombre del nodo
- * @param _type Tipo de dato
+ * @param _atom Tipo de dato
  * @return Node* 
  */
-static Node* newNode( int _pos, char* _name, int _type )
+static Node* newNode( int _pos, char* _name, char _atom )
 {
 	Node* n = (Node*) malloc( sizeof( Node ) );
 	if( n ){
 		n->pos = _pos;
 		n->name = _name;
-		n->type = _type;
+		n->atom = _atom;
 		n->next = NULL;
 	}
 	return n;
@@ -79,17 +79,17 @@ bool SLL_IsEmpty( SLL* this )
  * @param this Referencia a la lista misma
  * @param pos Valor de posición que tendrá el nodo
  * @param name Nombre del nodo
- * @param type Tipo
+ * @param atom Atomo
  * @return true si insertó correctamente
  * @return false si no pudo insertar
  */
-bool SLL_Insert_back( SLL* this, int pos, char* name, int type )
+bool SLL_Insert_back( SLL* this, char* name, char atom )
 {
 	assert( this );
 
 	bool done = false;
 
-	Node* n = newNode( pos, name, type );
+	Node* n = newNode( this->len, name, atom );
 	if( n ){
 		done = true;
 
@@ -111,15 +111,15 @@ bool SLL_Insert_back( SLL* this, int pos, char* name, int type )
  * @param this Referencia a la lista misma
  * @param pos Posición del nodo en la lista
  * @param name Nombre del nodo
- * @param type Tipo
+ * @param atom Tipo
  * @return true Si pudo insertar
  * @return false Si no pudo insertar
  */
-bool SLL_Insert_front( SLL* this, int pos, char* name, int type )
+bool SLL_Insert_front( SLL* this, char* name, char atom )
 {
 	assert(this);
 	bool done = false;
-	Node* n = newNode(pos, name, type);
+	Node* n = newNode(0, name, atom);
 	if(n){
 		done = true;
 		if(SLL_IsEmpty(this)){
@@ -139,17 +139,18 @@ bool SLL_Insert_front( SLL* this, int pos, char* name, int type )
  * @param this Referencia a la misma lista
  * @param pos Posición del nodo
  * @param name Nombre del nodo
- * @param type Tipo del nodo
+ * @param atom Tipo del nodo
  * @return true Si pudo insertar
  * @return false Si no pudo insertar
  */
-bool SLL_Insert_after(SLL* this, int pos, char* name, int type){
+bool SLL_Insert_after(SLL* this, char* name, char atom){
 	assert(this);
 	bool done = false;
-	Node* n = newNode(pos, name, type);
+	Node* n = newNode(0, name, atom);
 	if(n){
 		done = true;
 		Node* tmp = this->cursor->next;
+		n->pos = this->cursor->pos + 1;
 		this->cursor->next = n;
 		n->next = tmp;
 		++this->len;
@@ -163,18 +164,18 @@ bool SLL_Insert_after(SLL* this, int pos, char* name, int type){
  * @param this Referencia a la misma lista
  * @param pos_back Valor posición regresado del nodo a sacar
  * @param name_back Valor nombre regresado del nodo a sacar
- * @param type_back Valor tipo regresado del nodo a sacar
+ * @param atom_back Valor tipo regresado del nodo a sacar
  * @return true Si pudo sacar al nodo de la lista
  * @return false Si no pudo sacar al nodo de la lista
  */
-bool SLL_Remove_front( SLL* this, int* pos_back, char* name_back, int* type_back )
+bool SLL_Remove_front( SLL* this, int* pos_back, char* name_back, char* atom_back )
 {
 	assert( this );
 
 	if( SLL_IsEmpty( this ) ){ return false; }
 	*pos_back = this->first->pos;
 	name_back = this->first->name;
-	*type_back = this->first->type;
+	*atom_back = this->first->atom;
 	//this->first->data = *data_back;
 	Node* tmp = this->first->next;
 	free( this->first );
@@ -190,13 +191,13 @@ bool SLL_Remove_front( SLL* this, int* pos_back, char* name_back, int* type_back
  * sentido si el valor devuelto por la función es false.
  * @return true si la lista no está vacía; false en caso contrario.
  */
-bool SLL_PeekFront( SLL* this, int* pos_back, char* name_back, int* type_back )
+bool SLL_PeekFront( SLL* this, int* pos_back, char* name_back, char* atom_back )
 {
 	assert(this);
 	if (SLL_IsEmpty(this)) {return false;}
 	*pos_back = this->first->pos;
 	name_back = this->first->name;
-	*type_back = this->first->type;
+	*atom_back = this->first->atom;
 
 	return true;
 }
@@ -207,17 +208,17 @@ bool SLL_PeekFront( SLL* this, int* pos_back, char* name_back, int* type_back )
  * @param this Referencia a la misma lista
  * @param pos_back Valor posición del nodo
  * @param name_back Valor nombre del nodo
- * @param type_back Valor tipo del nodo
+ * @param atom_back Valor tipo del nodo
  * @return true Si encontró al nodo
  * @return false Si no encontró al nodo
  */
-bool SLL_PeekBack( SLL* this, int* pos_back, char* name_back, int* type_back )
+bool SLL_PeekBack( SLL* this, int* pos_back, char* name_back, char* atom_back )
 {
 	assert(this);
 	if (SLL_IsEmpty(this)){ return false;}
 	*pos_back = this->last->pos;
 	name_back = this->last->name;
-	*type_back = this->last->type;
+	*atom_back = this->last->atom;
 	return true;
 }
 
@@ -345,7 +346,7 @@ void SLL_Print( SLL* this, FILE* out )
 	if( !SLL_IsEmpty( this ) ){
 
 		for( Node* it = this->first; it != NULL; it = it->next ){
-			fprintf(out, "( %d, %s, %d)\n", it->pos, it->name, it->type);
+			fprintf(out, "( %d, %s, %d)\n", it->pos, it->name, it->atom);
 		}
 	}
 }

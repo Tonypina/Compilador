@@ -16,7 +16,7 @@ typedef struct Node
 {
 	int pos;
 	char* name;
-	int type;
+	char atom;
 	struct Node* next;
 } Node;
 
@@ -34,12 +34,12 @@ typedef struct SLL
 
 SLL*   SLL_New();
 void   SLL_Delete(       SLL** this );
-bool   SLL_Insert_back(  SLL* this, int pos, char* name, int type );
-bool   SLL_Insert_front( SLL* this, int pos, char* name, int type );
-bool   SLL_Insert_after( SLL* this, int pos, char* name, int type );
-bool   SLL_Remove_front( SLL* this, int* pos_back, char* name_back, int* type_back );
-bool   SLL_PeekFront(    SLL* this, int* pos_back, char* name_back, int* type_back );
-bool   SLL_PeekBack(     SLL* this, int* pos_back, char* name_back, int* type_back );
+bool   SLL_Insert_back(  SLL* this, char* name, char atom );
+bool   SLL_Insert_front( SLL* this, char* name, char atom );
+bool   SLL_Insert_after( SLL* this, char* name, char atom );
+bool   SLL_Remove_front( SLL* this, int* pos_back, char* name_back, char* atom_back );
+bool   SLL_PeekFront(    SLL* this, int* pos_back, char* name_back, char* atom_back );
+bool   SLL_PeekBack(     SLL* this, int* pos_back, char* name_back, char* atom_back );
 size_t SLL_Len(          SLL* this );
 bool   SLL_IsEmpty(      SLL* this );
 void   SLL_MakeEmpty(    SLL* this );

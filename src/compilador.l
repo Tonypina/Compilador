@@ -16,6 +16,15 @@
 
     /* Lista Ligada Simple */
     #include "SLL/SLL.h"
+    
+
+    #define IDENT_ATOM "i"
+    #define CTENUM_ATOM "n"
+    #define CTEREA_ATOM "r"
+    #define CTECAD_ATOM "s"
+    #define IGUAL_ATOM "="
+
+    enum CLASS{ CLASS_0, CLASS_1, CLASS_2, CLASS_3, CLASS_4, CLASS_5, CLASS_6, CLASS_7, CLASS_8 } 
 
     /* Archivo de entrada y salida */
     FILE *yyin;
@@ -29,6 +38,7 @@
 
     /* Token auxiliar */
     Token a;
+
 
     /* Clase 0 */
     /* Estructura para definir palabras reservadas {palabra,valor} */
@@ -52,6 +62,26 @@
         "throw"
     };
 
+    char* PALRESERVADAS_ATOMS[] = {
+        "a",
+        "b",
+        "f",
+        "t",
+        "g",
+        "w",
+        "m",
+        "#",
+        "o",
+        "x",
+        "j",
+        "h",
+        "p",
+        "c",
+        "q",
+        "y",
+        "z"
+    };
+
     /* Clase 7 */
     char* OPRELACIONALES[] = {
         "<",
@@ -61,6 +91,15 @@
         "==",
         "!="
     };
+    
+    char* OPRELACIONALES_ATOMS[] = {
+        "<",
+        ">",
+        "|",
+        "u",
+        "e",
+        "d"
+    };
 
     /* Tablas basadas en listas ligadas simples */
     SLL* TABLA_PALRESERVADAS;
@@ -69,6 +108,9 @@
     SLL* TABLA_CTESREALES;
     SLL* TABLA_CTESCADENAS;
     SLL* TABLA_OPRELACIONALES;
+
+    /* Declaración de la cadena de átomos */
+    char* atoms;
 
     /* Declaración de las funciones que crean tokens */
     Token tokenPalabraReservada(char* palabra);
@@ -266,12 +308,12 @@ int main(int argc, char* argv[]) {
             TABLA_CTESCADENAS = SLL_New();
             TABLA_OPRELACIONALES = SLL_New();
 
-            for (int i = 0; i < ( * ( &PALRESERVADAS + 1) - PALRESERVADAS) + 1; i++) {
-                SLL_Insert_back(TABLA_PALRESERVADAS, i, PALRESERVADAS[i], -1);
+            for (int i = 0; i < ( *(&PALRESERVADAS + 1) - PALRESERVADAS) + 1; i++) {
+                SLL_Insert_back(TABLA_PALRESERVADAS, PALRESERVADAS[i], PALRESERVADAS_ATOMS[i]);
             }
 
-            for (int i = 0; i < ( * ( &OPRELACIONALES + 1) - OPRELACIONALES) + 1; i++) {
-                SLL_Insert_back(TABLA_OPRELACIONALES, i, OPRELACIONALES[i], -1);
+            for (int i = 0; i < ( *(&OPRELACIONALES + 1) - OPRELACIONALES) + 1; i++) {
+                SLL_Insert_back(TABLA_OPRELACIONALES, OPRELACIONALES[i], OPRELACIONALES_ATOMS[i]);
             }
 
             SLL_MakeEmpty(TABLA_IDENTIFICADORES);
@@ -324,9 +366,10 @@ Token tokenPalabraReservada(char* palabra) {
 
     // Si está en la tabla
     if (SLL_Search(TABLA_PALRESERVADAS, palabra)) {
-        aux.class = 0;
+        aux.class = CLASS_0;
         aux.val = TABLA_PALRESERVADAS->cursor->pos;
-
+        atoms = strcat(atoms, TABLA_PALRESERVADAS->cursor->atom);
+        
         return aux;
     }
 
@@ -351,9 +394,10 @@ Token tokenIdentificadores(char* id) {
         return token_aux;
     }
 
-    token_aux.class = 1;
+    token_aux.class = CLASS_1;
     token_aux.val = SLL_Len(TABLA_IDENTIFICADORES);
-    SLL_Insert_back(TABLA_IDENTIFICADORES, SLL_Len(TABLA_IDENTIFICADORES), id, -1);
+    atoms = strcat(atoms, IDENT_ATOM);
+    SLL_Insert_back(TABLA_IDENTIFICADORES, id, IDENT_ATOM);
 
     return token_aux;
 }
@@ -363,9 +407,10 @@ Token tokenConstantesNumericas(char* cte) {
 
     Token token_aux;
 
-    token_aux.class = 2;
+    token_aux.class = CLASS_2;
     token_aux.val = SLL_Len(TABLA_CTESNUMERICAS);
-    SLL_Insert_back(TABLA_CTESNUMERICAS, SLL_Len(TABLA_CTESNUMERICAS), cte, -1);
+    atoms = strcat(atoms, CTENUM_ATOM);
+    SLL_Insert_back(TABLA_CTESNUMERICAS, cte, CTENUM_ATOM);
 
     return token_aux;
 }
@@ -375,9 +420,10 @@ Token tokenConstantesReales(char* cte) {
 
     Token token_aux;
 
-    token_aux.class = 3;
+    token_aux.class = CLASS_3;
     token_aux.val = SLL_Len(TABLA_CTESREALES);
-    SLL_Insert_back(TABLA_CTESREALES, SLL_Len(TABLA_CTESREALES), cte, -1);
+    atoms = strcat(atoms, CTEREA_ATOM);
+    SLL_Insert_back(TABLA_CTESREALES, cte, CTEREA_ATOM);
 
     return token_aux;
 }
@@ -387,9 +433,10 @@ Token tokenConstantesCadenas(char* cte) {
 
     Token token_aux;
 
-    token_aux.class = 4;
+    token_aux.class = CLASS_4;
     token_aux.val = SLL_Len(TABLA_CTESCADENAS);
-    SLL_Insert_back(TABLA_CTESCADENAS, SLL_Len(TABLA_CTESCADENAS), cte, -1);
+    atoms = strcat(atoms, CTECAD_ATOM);
+    SLL_Insert_back(TABLA_CTESCADENAS, cte, CTECAD_ATOM);
 
     return token_aux;
 }
@@ -399,10 +446,12 @@ Token tokenSimbolosEspeciales(char* s) {
 
     Token token_aux;
 
-    token_aux.class = 5;
+    token_aux.class = CLASS_5;
 
     // Se envía el ASCII
     token_aux.val = s[0] + 0;
+
+    atoms = strcat(atoms, s);
 
     return token_aux;
 }
@@ -412,10 +461,12 @@ Token tokenOperadoresAritmeticos(char* s) {
 
     Token token_aux;
 
-    token_aux.class = 6;
+    token_aux.class = CLASS_6;
 
     // Se envía el ASCII
     token_aux.val = s[0] + 0;
+    
+    atoms = strcat(atoms, s);
 
     return token_aux;
 }
@@ -426,8 +477,10 @@ Token tokenOperadoresRelacionales(char* s) {
     Token token_aux;
 
     if (SLL_Search(TABLA_OPRELACIONALES, s)) {
-        token_aux.class = 7;
+        token_aux.class = CLASS_7;
         token_aux.val = TABLA_OPRELACIONALES->cursor->pos;
+
+        atoms = strcat(atoms, TABLA_OPRELACIONALES->cursor->atom);
 
         return token_aux;
 
@@ -445,10 +498,12 @@ Token tokenOperadorAsignacion(char* s) {
 
     Token token_aux;
 
-    token_aux.class = 8;
+    token_aux.class = CLASS_8;
 
     // Se envía el ASCII
     token_aux.val = s[0] + 0;
+
+    atoms = strcat(atoms, IGUAL_ATOM);
 
     return token_aux;
 }
@@ -458,15 +513,9 @@ Token tokenOperadorAsignacion(char* s) {
 /*1*/
 void Program() {
 
-    if (c == 'b' || c == 'g' || c == '#' || c == 'y' || c == 'x') {
-        Func();
-        OtraFunc();
-        return;
-
-    } else {
-        error();
-
-    }
+    Func();
+    OtraFunc();
+    
 }
 
 /*2 - 3*/
