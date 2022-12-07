@@ -346,7 +346,7 @@ void SLL_Print( SLL* this, FILE* out )
 	if( !SLL_IsEmpty( this ) ){
 
 		for( Node* it = this->first; it != NULL; it = it->next ){
-			fprintf(out, "( %d, %s, %d)\n", it->pos, it->name, it->atom);
+			fprintf(out, "( %d, %s, %s)\n", it->pos, it->name, it->atom);
 		}
 	}
 }
