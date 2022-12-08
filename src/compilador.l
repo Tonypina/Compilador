@@ -265,7 +265,10 @@ int main (int argc, char *argv[]) {
             SLL_MakeEmpty(TABLA_CTESCADENAS);
 
             yylex();
-                    
+
+            fprintf(archSal, "\n-------Cadena de Átomos--------\n");
+            fprintf(archSal, "%s\n", atoms);
+
             Program();
         }
     }
@@ -494,7 +497,7 @@ bool OtraFunc() {
         return true;
     }
 
-    return false;
+    return true;
 }
 
 /*4*/
@@ -1533,7 +1536,7 @@ bool otroArg() {
 
     if (*atoms == ',') {
         atoms++;
-        
+
         V();
         otroArg();
 
