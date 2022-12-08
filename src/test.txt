@@ -1,5 +1,9 @@
 number $main () {
-big $Grande=2, $num;
-real $numReal;
-symbol $cad="cadena#1", $cadVacia
+    big $Grande=2, $num;
+    real $numReal;
+    symbol $cad="cadena#1", $cadVacia;
+
+    $num=$Grande+15*(o12-93);
+    $cadVacia= "cadena#2";
+    $numReal=27.9;
 }
