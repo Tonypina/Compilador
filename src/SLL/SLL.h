@@ -34,9 +34,9 @@ typedef struct SLL
 
 SLL*   SLL_New();
 void   SLL_Delete(       SLL** this );
-bool   SLL_Insert_back(  SLL* this, char* name, char atom );
-bool   SLL_Insert_front( SLL* this, char* name, char atom );
-bool   SLL_Insert_after( SLL* this, char* name, char atom );
+bool   SLL_Insert_back(  SLL* this, int pos, char* name, char atom );
+bool   SLL_Insert_front( SLL* this, int pos, char* name, char atom );
+bool   SLL_Insert_after( SLL* this, int pos, char* name, char atom );
 bool   SLL_Remove_front( SLL* this, int* pos_back, char* name_back, char* atom_back );
 bool   SLL_PeekFront(    SLL* this, int* pos_back, char* name_back, char* atom_back );
 bool   SLL_PeekBack(     SLL* this, int* pos_back, char* name_back, char* atom_back );

@@ -79,17 +79,17 @@ bool SLL_IsEmpty( SLL* this )
  * @param this Referencia a la lista misma
  * @param pos Valor de posición que tendrá el nodo
  * @param name Nombre del nodo
- * @param atom Atomo
+ * @param atom Tipo
  * @return true si insertó correctamente
  * @return false si no pudo insertar
  */
-bool SLL_Insert_back( SLL* this, char* name, char atom )
+bool SLL_Insert_back( SLL* this, int pos, char* name, char atom )
 {
 	assert( this );
 
 	bool done = false;
 
-	Node* n = newNode( this->len, name, atom );
+	Node* n = newNode( pos, name, atom );
 	if( n ){
 		done = true;
 
@@ -115,11 +115,11 @@ bool SLL_Insert_back( SLL* this, char* name, char atom )
  * @return true Si pudo insertar
  * @return false Si no pudo insertar
  */
-bool SLL_Insert_front( SLL* this, char* name, char atom )
+bool SLL_Insert_front( SLL* this, int pos, char* name, char atom )
 {
 	assert(this);
 	bool done = false;
-	Node* n = newNode(0, name, atom);
+	Node* n = newNode(pos, name, atom);
 	if(n){
 		done = true;
 		if(SLL_IsEmpty(this)){
@@ -143,14 +143,13 @@ bool SLL_Insert_front( SLL* this, char* name, char atom )
  * @return true Si pudo insertar
  * @return false Si no pudo insertar
  */
-bool SLL_Insert_after(SLL* this, char* name, char atom){
+bool SLL_Insert_after(SLL* this, int pos, char* name, char atom){
 	assert(this);
 	bool done = false;
-	Node* n = newNode(0, name, atom);
+	Node* n = newNode(pos, name, atom);
 	if(n){
 		done = true;
 		Node* tmp = this->cursor->next;
-		n->pos = this->cursor->pos + 1;
 		this->cursor->next = n;
 		n->next = tmp;
 		++this->len;
@@ -346,7 +345,7 @@ void SLL_Print( SLL* this, FILE* out )
 	if( !SLL_IsEmpty( this ) ){
 
 		for( Node* it = this->first; it != NULL; it = it->next ){
-			fprintf(out, "( %d, %s, %s)\n", it->pos, it->name, it->atom);
+			fprintf(out, "( %d, %s, %c)\n", it->pos, it->name, it->atom);
 		}
 	}
 }
