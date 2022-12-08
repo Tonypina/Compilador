@@ -18,13 +18,11 @@
     #include "SLL/SLL.h"
     
 
-    #define IDENT_ATOM "i"
-    #define CTENUM_ATOM "n"
-    #define CTEREA_ATOM "r"
-    #define CTECAD_ATOM "s"
-    #define IGUAL_ATOM "="
-
-    enum CLASS{ CLASS_0, CLASS_1, CLASS_2, CLASS_3, CLASS_4, CLASS_5, CLASS_6, CLASS_7, CLASS_8 } 
+    #define IDENT_ATOM  'i'
+    #define CTENUM_ATOM 'n'
+    #define CTEREA_ATOM 'r'
+    #define CTECAD_ATOM 's'
+    #define IGUAL_ATOM  '='
 
     /* Archivo de entrada y salida */
     FILE *yyin;
@@ -62,24 +60,24 @@
         "throw"
     };
 
-    char* PALRESERVADAS_ATOMS[] = {
-        "a",
-        "b",
-        "f",
-        "t",
-        "g",
-        "w",
-        "m",
-        "#",
-        "o",
-        "x",
-        "j",
-        "h",
-        "p",
-        "c",
-        "q",
-        "y",
-        "z"
+    char PALRESERVADAS_ATOMS[] = {
+        'a',
+        'b',
+        'f',
+        't',
+        'g',
+        'w',
+        'm',
+        '#',
+        'o',
+        'x',
+        'j',
+        'h',
+        'p',
+        'c',
+        'q',
+        'y',
+        'z'
     };
 
     /* Clase 7 */
@@ -92,13 +90,13 @@
         "!="
     };
     
-    char* OPRELACIONALES_ATOMS[] = {
-        "<",
-        ">",
-        "|",
-        "u",
-        "e",
-        "d"
+    char OPRELACIONALES_ATOMS[] = {
+        '<',
+        '>',
+        '|',
+        'u',
+        'e',
+        'd'
     };
 
     /* Tablas basadas en listas ligadas simples */
@@ -110,7 +108,7 @@
     SLL* TABLA_OPRELACIONALES;
 
     /* Declaración de la cadena de átomos */
-    char* atoms;
+    char* atoms = "";
 
     /* Declaración de las funciones que crean tokens */
     Token tokenPalabraReservada(char* palabra);
@@ -125,6 +123,51 @@
 
     void imprimirTablas();
     char* recortarCadena(char* s);
+
+    bool Program();
+    bool OtraFunc();
+    bool Func();
+    bool Param();
+    bool OtroParam();
+    bool Cuerpo();
+    bool Decl();
+    bool D();
+    bool Tipo();
+    bool K();
+    bool Q();
+    bool N();
+    bool C();
+    bool A();
+    bool AP();
+    bool E();
+    bool EP();
+    bool T();
+    bool TP();
+    bool F();
+    bool R();
+    bool RP();
+    bool V();
+    bool VP();
+    bool VPP();
+    bool VPPP();
+    bool P();
+    bool ListaP();
+    bool W();
+    bool I();
+    bool IP();
+    bool J();
+    bool Y();
+    bool X();
+    bool Z();
+    bool H();
+    bool CP();
+    bool OP();
+    bool U();
+    bool Devuelve();
+    bool Valor();
+    bool Llama();
+    bool Arg();
+    bool otroArg();
 %}
 
 /* Expresiones Regulares */
@@ -161,111 +204,11 @@ OPARITMETICOS   "+"|"*"|"/"|"%"|"\\"|"^"|"-"
 OPRELACIONALES  "<"|">"|"<="|">="|"=="|"!="
 
 /* Clase 8 */
-OPASIGNACION    [=]
+OPASIGNACION    "="
 
 
 /*Conjuntos de seleccion*/
-/*C.S.(1)={bg#yx}
-C.S.(2)={bg#yx}
-C.S.(3)={-|}
-C.S.(4)={bg#yx}
-C.S.(5)={bg#yx}
-C.S.(6)={)}
-C.S.(7)={,}
-C.S.(8)={)}
-C.S.(9)={i}bg#yxcwfjhz[}
-C.S.(10)={i}cwfjhz[}
-C.S.(11)={bg#yx}
-C.S.(12)={bg#yx}
-C.S.(13)={b}
-C.S.(14)={g}
-C.S.(15)={#}
-C.S.(16)={y}
-C.S.(17)={x}
-C.S.(18)={i}
-C.S.(19)={;}
-C.S.(20)={=}
-C.S.(21)={,}
-C.S.(22)={n}
-C.S.(23)={r}
-C.S.(24)={s}
-C.S.(25)={;}
-C.S.(26)={,}
-C.S.(27)={i}
-C.S.(28)={s}
-C.S.(29)={(inr[}
-C.S.(30)={(inr[}
-C.S.(31)={+}
-C.S.(32)={-}
-C.S.(33)={;)}
-C.S.(34)={(inr[}
-C.S.(35)={*}
-C.S.(36)={/}
-C.S.(37)={\}
-C.S.(38)={%}
-C.S.(39)={^}
-C.S.(40)={;)+-}
-C.S.(41)={(}
-C.S.(42)={i}
-C.S.(43)={n}
-C.S.(44)={r}
-C.S.(45)={[}
-C.S.(46)={i}
-C.S.(47)={n}
-C.S.(48)={r}
-C.S.(49)={s}
-C.S.(50)={>}
-C.S.(51)={<}
-C.S.(52)={l}
-C.S.(53)={e}
-C.S.(54)={d}
-C.S.(55)={u}
-C.S.(56)={i}
-C.S.(57)={n}
-C.S.(58)={r}
-C.S.(59)={s}
-C.S.(60)={n}
-C.S.(61)={i}
-C.S.(62)={r}
-C.S.(63)={i}
-C.S.(64)={s}
-C.S.(65)={i}
-C.S.(66)={i}
-C.S.(67)={f}
-C.S.(68)={h}
-C.S.(69)={w}
-C.S.(70)={j}
-C.S.(71)={[}
-C.S.(72)={z}
-C.S.(73)={c}
-C.S.(74)={}:taoq}
-C.S.(75)={icwfjhz[}
-C.S.(76)={w}
-C.S.(77)={f}
-C.S.(78)={t}
-C.S.(79)={:}
-C.S.(80)={j}
-C.S.(81)={i}
-C.S.(82)={;}
-C.S.(83)={inrs}
-C.S.(84)={;}
-C.S.(85)={i}
-C.S.(86)={)}
-C.S.(87)={h}
-C.S.(88)={a}
-C.S.(89)={}o}
-C.S.(90)={o}
-C.S.(91)={}}
-C.S.(92)={q}
-C.S.(93)={}ao}
-C.S.(94)={z}
-C.S.(95)={inrs}
-C.S.(96)={)}
-C.S.(97)={[}
-C.S.(98)={)}
-C.S.(99)={inrs}
-C.S.(100)={,}
-C.S.(101)={)}*/
+
 
 /*Definición de expresiones regulares para componentes léxicos*/
 
@@ -288,14 +231,14 @@ C.S.(101)={)}*/
 %%
 
 /* Función main, abre los archivos e inicializa las tablas */
-int main(int argc, char* argv[]) {
+int main (int argc, char *argv[]) {
 
-    if ((yyin = fopen(argv[1], "rt")) == NULL) {
+    if ( (yyin = fopen(argv[1], "rt")) == NULL ) {
         printf("No se pudo abrir el archivo de entrada.\n");
         return 1;
     } else {
 
-        if ((archSal = fopen("Salida.txt", "w")) == NULL) {
+        if ( (archSal = fopen("Salida.txt","w")) == NULL ) {
             printf("No se pudo abrir el archivo de salida.\n");
             fclose(yyin);
             return 1;
@@ -308,12 +251,12 @@ int main(int argc, char* argv[]) {
             TABLA_CTESCADENAS = SLL_New();
             TABLA_OPRELACIONALES = SLL_New();
 
-            for (int i = 0; i < ( *(&PALRESERVADAS + 1) - PALRESERVADAS) + 1; i++) {
-                SLL_Insert_back(TABLA_PALRESERVADAS, PALRESERVADAS[i], PALRESERVADAS_ATOMS[i]);
+            for (int i = 0; i < (*(&PALRESERVADAS + 1) - PALRESERVADAS)+1; i++) {
+                SLL_Insert_back(TABLA_PALRESERVADAS, i, PALRESERVADAS[i], PALRESERVADAS_ATOMS[i]);
             }
 
-            for (int i = 0; i < ( *(&OPRELACIONALES + 1) - OPRELACIONALES) + 1; i++) {
-                SLL_Insert_back(TABLA_OPRELACIONALES, OPRELACIONALES[i], OPRELACIONALES_ATOMS[i]);
+            for (int i = 0; i < (*(&OPRELACIONALES + 1) - OPRELACIONALES)+1; i++) {
+                SLL_Insert_back(TABLA_OPRELACIONALES, i, OPRELACIONALES[i], OPRELACIONALES_ATOMS[i]);
             }
 
             SLL_MakeEmpty(TABLA_IDENTIFICADORES);
@@ -322,8 +265,6 @@ int main(int argc, char* argv[]) {
             SLL_MakeEmpty(TABLA_CTESCADENAS);
 
             yylex();
-            // Llamada al símbolo inicial de la gramática
-            Program();
         }
     }
 
@@ -349,7 +290,7 @@ void imprimirTablas() {
     SLL_Print(TABLA_PALRESERVADAS, archSal);
     fprintf(archSal, "\n-------Tabla de Palabras Identificadores--------\n");
     SLL_Print(TABLA_IDENTIFICADORES, archSal);
-    fprintf(archSal, "\n-------Tabla de Constantes Numericas--------\n");
+    fprintf(archSal, "\n-------Tabla de Constantes Enteras--------\n");
     SLL_Print(TABLA_CTESNUMERICAS, archSal);
     fprintf(archSal, "\n-------Tabla de Constantes Reales--------\n");
     SLL_Print(TABLA_CTESREALES, archSal);
@@ -357,19 +298,33 @@ void imprimirTablas() {
     SLL_Print(TABLA_CTESCADENAS, archSal);
     fprintf(archSal, "\n-------Tabla de Operadores Relacionales--------\n");
     SLL_Print(TABLA_OPRELACIONALES, archSal);
+    SLL_Print(TABLA_CTESCADENAS, archSal);
+    fprintf(archSal, "\n-------Cadena de Átomos--------\n");
+    fprintf(archSal, "%s", atoms);
+}
+
+char* append(const char * str, char c)
+{
+    char* new_string = malloc(strlen(str)+2);  // add 2 to make room for the character we will append and the null termination character at the end
+    if (new_string) {
+        strcpy(new_string, str);
+        new_string[strlen(new_string)] = c;
+    }
+    return new_string;
 }
 
 /* Genera token para una palabra reservada */
-Token tokenPalabraReservada(char* palabra) {
+Token tokenPalabraReservada( char* palabra ) {
 
     Token aux;
 
     // Si está en la tabla
     if (SLL_Search(TABLA_PALRESERVADAS, palabra)) {
-        aux.class = CLASS_0;
+        aux.class = 0;
         aux.val = TABLA_PALRESERVADAS->cursor->pos;
-        atoms = strcat(atoms, TABLA_PALRESERVADAS->cursor->atom);
-        
+
+        atoms = append(atoms, TABLA_PALRESERVADAS->cursor->atom);
+
         return aux;
     }
 
@@ -381,7 +336,7 @@ Token tokenPalabraReservada(char* palabra) {
 }
 
 /* Genera token para un identificador */
-Token tokenIdentificadores(char* id) {
+Token tokenIdentificadores( char* id ) {
 
     Token token_aux;
 
@@ -394,59 +349,67 @@ Token tokenIdentificadores(char* id) {
         return token_aux;
     }
 
-    token_aux.class = CLASS_1;
+    token_aux.class = 1;
     token_aux.val = SLL_Len(TABLA_IDENTIFICADORES);
-    atoms = strcat(atoms, IDENT_ATOM);
-    SLL_Insert_back(TABLA_IDENTIFICADORES, id, IDENT_ATOM);
+
+    atoms = append(atoms, IDENT_ATOM);
+
+    SLL_Insert_back(TABLA_IDENTIFICADORES, SLL_Len(TABLA_IDENTIFICADORES), id, IDENT_ATOM);
 
     return token_aux;
 }
 
 /* Genera token de constantes numericas */
-Token tokenConstantesNumericas(char* cte) {
+Token tokenConstantesNumericas( char* cte ) {
 
     Token token_aux;
 
-    token_aux.class = CLASS_2;
+    token_aux.class = 2;
     token_aux.val = SLL_Len(TABLA_CTESNUMERICAS);
-    atoms = strcat(atoms, CTENUM_ATOM);
-    SLL_Insert_back(TABLA_CTESNUMERICAS, cte, CTENUM_ATOM);
+
+    atoms = append(atoms, CTENUM_ATOM);
+
+    SLL_Insert_back(TABLA_CTESNUMERICAS, SLL_Len(TABLA_CTESNUMERICAS), cte, CTENUM_ATOM);
 
     return token_aux;
 }
 
 /* Genera token de constantes reales */
-Token tokenConstantesReales(char* cte) {
+Token tokenConstantesReales( char* cte ) {
 
     Token token_aux;
 
-    token_aux.class = CLASS_3;
+    token_aux.class = 3;
     token_aux.val = SLL_Len(TABLA_CTESREALES);
-    atoms = strcat(atoms, CTEREA_ATOM);
-    SLL_Insert_back(TABLA_CTESREALES, cte, CTEREA_ATOM);
+
+    atoms = append(atoms, CTEREA_ATOM);
+
+    SLL_Insert_back(TABLA_CTESREALES, SLL_Len(TABLA_CTESREALES), cte, CTEREA_ATOM);
 
     return token_aux;
 }
 
 /* Genera token de constantes de cadenas */
-Token tokenConstantesCadenas(char* cte) {
+Token tokenConstantesCadenas( char* cte ) {
 
     Token token_aux;
 
-    token_aux.class = CLASS_4;
+    token_aux.class = 4;
     token_aux.val = SLL_Len(TABLA_CTESCADENAS);
-    atoms = strcat(atoms, CTECAD_ATOM);
-    SLL_Insert_back(TABLA_CTESCADENAS, cte, CTECAD_ATOM);
+
+    atoms = append(atoms, CTECAD_ATOM);
+
+    SLL_Insert_back(TABLA_CTESCADENAS, SLL_Len(TABLA_CTESCADENAS), cte, CTECAD_ATOM);
 
     return token_aux;
 }
 
 /* Genera token de simbolos especiales */
-Token tokenSimbolosEspeciales(char* s) {
+Token tokenSimbolosEspeciales( char* s ) {
 
     Token token_aux;
 
-    token_aux.class = CLASS_5;
+    token_aux.class = 5;
 
     // Se envía el ASCII
     token_aux.val = s[0] + 0;
@@ -457,33 +420,32 @@ Token tokenSimbolosEspeciales(char* s) {
 }
 
 /* Genera token de operadores aritméticos */
-Token tokenOperadoresAritmeticos(char* s) {
+Token tokenOperadoresAritmeticos( char* s ) {
 
     Token token_aux;
 
-    token_aux.class = CLASS_6;
+    token_aux.class = 6;
 
     // Se envía el ASCII
     token_aux.val = s[0] + 0;
-    
+
     atoms = strcat(atoms, s);
 
     return token_aux;
 }
 
 /* Genra token de operadores relacionales */
-Token tokenOperadoresRelacionales(char* s) {
+Token tokenOperadoresRelacionales( char* s ) {
 
     Token token_aux;
 
     if (SLL_Search(TABLA_OPRELACIONALES, s)) {
-        token_aux.class = CLASS_7;
+        token_aux.class = 7;
         token_aux.val = TABLA_OPRELACIONALES->cursor->pos;
 
-        atoms = strcat(atoms, TABLA_OPRELACIONALES->cursor->atom);
+        atoms = append(atoms, TABLA_OPRELACIONALES->cursor->atom);
 
         return token_aux;
-
     }
 
     // No es operador valido
@@ -494,16 +456,16 @@ Token tokenOperadoresRelacionales(char* s) {
 }
 
 /* Genera token de operadores de asignación */
-Token tokenOperadorAsignacion(char* s) {
+Token tokenOperadorAsignacion( char* s ) {
 
     Token token_aux;
 
-    token_aux.class = CLASS_8;
+    token_aux.class = 8;
 
     // Se envía el ASCII
     token_aux.val = s[0] + 0;
 
-    atoms = strcat(atoms, IGUAL_ATOM);
+    atoms = strcat(atoms, s);
 
     return token_aux;
 }
@@ -511,1016 +473,1016 @@ Token tokenOperadorAsignacion(char* s) {
 
 /*Funciones Analizador*/
 /*1*/
-void Program() {
+bool Program() {
 
     Func();
     OtraFunc();
-    
+
+    return true;
 }
 
 /*2 - 3*/
-void OtraFunc() {
-    if (c == 'b' || c == 'g' || c == '#' || c == 'y' || c == 'x') {
-        Func();
+bool OtraFunc() {
+
+    if (Func()) {
         OtraFunc();
-        return;
-
-    } else if (c == '-' || c == '|') {
-        return;
-
-    } else {
-        error();
+        return true;
     }
+
+    return false;
 }
 
 /*4*/
-void Func() {
-    if (c == 'b' || c == 'g' || c == '#' || c == 'y' || c == 'x') {
-        Tipo();
+bool Func() {
+    
+    if (Tipo()){
+        atoms++;
 
-        if (c == 'i') {
-            c = getchar();
+        if (*atoms == 'i') {
+            atoms++;
 
-        } else {
-            error();
+            if (*atoms == '(') {
+                Param();
 
-        }
+                if (*atoms == ')') {
+                    atoms++;
 
-        if (c == '(') {
-            c = getchar();
-            Param();
+                    if (*atoms == '{') {
+                        Cuerpo();
 
-            if (c == ')') {
-                c = getchar();
+                        if (*atoms == '}') {
+                            return true;
+
+                        } else {
+                            printf("Error, se esperaba }");
+                        }
+
+                    } else {
+                        printf("Error, se esperaba {");
+                    }
+
+                } else {
+                    printf("Error, se esperaba )");
+                }
 
             } else {
-                error();
-
+                printf("Error, se esperaba (");
             }
 
         } else {
-            error();
+            printf("Error, se esperaba un identificador.");
         }
-
-        if (c == '{') {
-            c = getchar();
-            Cuerpo();
-
-            if (c == '}') {
-                c = getchar();
-
-            } else {
-                error();
-
-            }
-
-        } else {
-            error();
-
-        }
-        return;
 
     } else {
-        error();
-
+        printf("Se esperaba el tipo de la función.");
     }
+
+    return false;
 }
 
 /*5 - 6*/
-void Param() {
-    if (c == 'b' || c == 'g' || c == '#' || c == 'y' || c == 'x') {
-        Tipo();
+bool Param() {
+    if (Tipo()) {
+        atoms++;
 
-        if (c == 'i') {
-            c = getchar();
+        if (*atoms == 'i') {
+            OtroParam();
+            return true;
 
         } else {
-            error();
-
+            printf("Error, se esperaba un identificador.");
         }
-
-        OtroParam();
-        return;
-
-    } else if (c == ')') {
-        return;
-
-    } else {
-        error();
-
     }
+
+    return false;
 }
 
 
 /*7 - 8*/
-void Param() {
-    if (c == ',') {
-        Tipo();
+bool OtroParam() {
+    atoms++;
 
-        if (c == 'i') {
-            c = getchar();
+    if (*atoms == ',') {
+        if (Tipo()) {
+            atoms++;
 
+            if (*atoms == 'i') {
+                OtroParam();
+                return true;
+
+            } else {
+                printf("Error, se esperaba un identificador.");
+            }     
         } else {
-            error();
-
+            printf("Error, se esperaba el tipo de dato.");
         }
-
-        OtroParam();
-        return;
-
-    } else if (c == ')') {
-        return;
-
-    } else {
-        error();
-
     }
+
+    return false;
 }
 
 /*9*/
-void Cuerpo() {
-    if (c == 'i' || c == '}' || c == 'b' || c == 'g' || c == '#' || c == 'y' || c == 'x' || c == 'c' || c == 'w' || c == 'f' || c == 'j' || c == 'h' || c == 'z' || c == '[') {
-        Decl();
-        ListaP();
-        return;
+bool Cuerpo() {
 
-    } else {
-        error();
-
-    }
+    Decl();
+    ListaP();
 }
 
 /*10 - 11*/
-void Cuerpo() {
-    if (c == '{' || c == 'i' || c == '}' || c == 'c' || c == 'w' || c == 'f' || c == 'j' || c == 'h' || c == 'z' || c == '[') {
+bool Decl() {
+    if (D()) {
         Decl();
-        ListaP();
-        return;
-
-    } else if (c == 'b' || c == 'g' || c == '#' || c == 'y' || c == 'x') {
-        return;
-
-    } else {
-        error();
-
+        return true;
     }
+
+    return false;
 }
 
 /*Sentencia Declarativa*/
 /*12*/
-void D() {
-    if (c == 'b' || c == 'g' || c == '#' || c == 'y' || c == 'x') {
-        Tipo();
-        return;
+bool D() {
+    if (Tipo()) {
+        if (K()) {
+            atoms++;
 
-    } else {
-        error();
-
+            if (*atoms == ';') {
+                return true;
+            
+            } else {
+                printf("Error, se esperaba ;");
+            }
+        }
     }
+
+    return false;
 }
 
 /*13 - 17*/
-void Tipo() {
-    if (c == 'b' || c == 'g' || c == '#' || c == 'y' || c == 'x') {
-        c = getchar();
-        return;
+bool Tipo() {
+    atoms++;
+
+    if (*atoms == 'b' ||
+        *atoms == 'g' ||
+        *atoms == '#' ||
+        *atoms == 'y' ||
+        *atoms == 'x' ) {
+        return true;
 
     } else {
-        error();
-
+        printf("Error, se esperaba un tipo de dato válido.");
     }
+
+    return false;
 }
 
 /*18*/
-void K() {
-    if (c == 'i') {
-        c = getchar();
+bool K() {
+    atoms++;
+
+    if (*atoms == 'i') {
         Q();
-        return;
+        return true;
 
     } else {
-        error();
-
+        printf("Error, se esperaba un identificador.");
     }
+
+    return false;
 }
 
 /*19 - 21*/
-void Q() {
-    if (c == ';') {
-        return;
+bool Q() {
+    atoms++;
 
-    } else if (c == '=') {
-        c = getchar();
-        N();
-        C();
-        return;
+    if (*atoms == '=') {
+        if (N()) {
+            C();
+            return true;
+        
+        } else  {
+            printf("Error, se esperaba un valor.");
+        }
 
-    } else if (c == ',') {
-        c = getchar();
-        K();
-        return;
+    } else if (*atoms == ',') {
+        if (K()) {
+            return true;
+        }
 
     } else {
-        error();
-
+        return false;
     }
 }
 
 /*22 - 24*/
-void N() {
-    if (c == 'n' || c == 'r' || c == 's') {
-        c = getchar();
-        return;
+bool N() {
+    atoms++;
+
+    if (
+        *atoms == 'n' ||
+        *atoms == 'r' ||
+        *atoms == 's'
+    ) {
+        return true;
 
     } else {
-        error();
-
+        printf("Error, se esperaba un valor para el dato.");
     }
+
+    return false;
 }
 
 /*25 - 26*/
-void C() {
-    if (c == ';') {
-        return;
+bool C() {
+    atoms++;
 
-    } else if (c == ',') {
-        c = getchar();
-        K();
-        return;
-
-    } else {
-        error();
-
+    if (*atoms == ',') {
+        if (K()) {
+            return true;
+        }
     }
+
+    return false;
 }
 
 
 /*Sentencia de Asignacion*/
 /*27*/
-void A() {
-    if (c == 'i') {
-        c = getchar();
+bool A() {
+    atoms++;
 
-        if (c == '=') {
-            c = getchar();
-            AP();
+    if (*atoms == 'i') {
+        atoms++;
 
+        if (*atoms == '=') {
+            if (AP()) {
+                atoms++;
+
+                if (*atoms == ';') {
+                    return true;
+
+                } else {
+                    printf("Error, se esperaba un ;");
+                }
+            }
         } else {
-            error();
-
+            printf("Error, se esperaba un =");
         }
-        return;
 
     } else {
-        error();
-
+        printf("Error, se esperaba un identificador.");
     }
+
+    return false;
 }
 
 /*28 - 29*/
-void AP() {
-    if (c == 's') {
-        c = getchar();
-        return;
+bool AP() {
+    atoms++;
 
-    } else if (c == 'i' || c == 'n' || c == 'r' || c == '[') {
-        E();
-        return;
-
-    } else {
-        error();
-
+    if (*atoms == 's') {
+        return true;
+    
+    } else if (E()) {
+        return true;
+    
     }
+
+    return false;
 }
 
 
 /*Expresion Aritmetica*/
 /*30*/
-void E() {
-    if (c == 'i' || c == 'n' || c == 'r' || c == '[') {
-        T();
+bool E() {
+    if (T()) {
         EP();
-        return;
-
+        return true;
     } else {
-        error();
 
+        printf("Error, expresión incorrecta.");
     }
+
+    return false;
 }
 
 /*31 - 33*/
-void EP() {
-    if (c == '+' || c == '-') {
-        c = getchar();
-        T();
-        EP();
-        return;
+bool EP() {
+    atoms++;
 
-    } else if (c == ';' || c == ')') {
-        return;
-
-    } else {
-        error();
-
+    if (*atoms == '+' ||
+        *atoms == '-'
+    ) {
+        if (T()) {
+            EP();
+            return true;
+        }
     }
+
+    return false;
 }
 
 /*34*/
-void T() {
-    if (c == 'i' || c == 'n' || c == 'r' || c == '[') {
-        F();
+bool T() {
+    if (F()) {
         TP();
-        return;
-
-    } else {
-        error();
-
+        return true;
     }
+
+    return false;
 }
 
 /*35 - 40*/
-void TP() {
-    if (c == '*' || c == '/' || c == '\\' || c == '%' || c == '^') {
-        c = getchar();
-        F();
-        TP();
-        return;
+bool TP() {
+    atoms++;
 
-    } else if (c == ';' || c == ')' || c == '+' || c == '-') {
-        return;
+    if (*atoms == '*' ||
+        *atoms == '/' ||    
+        *atoms == '\\' ||    
+        *atoms == '%' ||    
+        *atoms == '^'
+    ) {
+        if (F()) {
+            TP();
+            return true;
+        }
 
     } else {
-        error();
-
+        printf("Error, se esperaba un operador aritmetico.");
     }
+
+    return false;
 }
 
 
 /*41 - 44*/
-void F() {
-    if (c == '(') {
-        c = getchar();
-        E();
+bool F() {
+    atoms++;
 
-    }
+    if (*atoms == '(') {
+        if (E()) {
+            atoms++;
 
-    if (c == ')') {
-        c = getchar();
+            if (*atoms == ')') {
+                return true;
+            
+            } else {
+                printf("Error, se esperaba )");
+            }
+        }
 
-    } else if (c == 'i' || c == 'n' || c == 'r') {
-        c = getchar();
-        return;
-
-    } else if (c == '[') {
-        Llama();
-        return;
-
+    } else if (*atoms == 'i' ||
+               *atoms == 'n' ||
+               *atoms == 'r'
+    ) {
+        return true;
+    
     } else {
-        error();
-
+        if (Llama()) {
+            return true;
+        }
     }
+
+    return false;
 }
 
 
 /*Expresion Relacional*/
 /*46 - 49*/
-void R() {
-    if (c == 'i') {
-        c = getchar();
-        RP();
-        V();
-        return;
-
-    } else if (c == 'n') {
-        c = getchar();
-        RP();
-        VP();
-        return;
-
-    } else if (c == 'r') {
-        c = getchar();
-        RP();
-        VPP();
-        return;
-
-    } else if (c == 's') {
-        c = getchar();
-        RP();
-        VPPP();
-        return;
-
-    } else {
-        error();
-
+bool R() {
+    atoms++;
+    
+    if (*atoms == 'i') {
+        if (RP()) {
+            if (V()) {
+                return true;
+            }
+        }
     }
+    
+    else if (*atoms == 'n') {
+        if (RP()) {
+            if (VP()) {
+                return true;
+            }
+        }
+    }
+    
+    else if (*atoms == 'r') {
+        if (RP()) {
+            if (VPP()) {
+                return true;
+            }
+        }
+    }
+    
+    else if (*atoms == 's') {
+        if (RP()) {
+            if (VPPP()) {
+                return true;
+            }
+        }
+    }
+
+    return false;
 }
 
 /*50 - 55*/
-void RP() {
-    if (c == '>' || c == '<' || c == 'l' || c == 'e' || c == 'd' || c == 'u') {
-        c = getchar();
-        return;
+bool RP() {
+    atoms++;
 
-    } else {
-        error();
-
+    if (
+        *atoms == '>' ||
+        *atoms == '<' ||
+        *atoms == 'l' ||
+        *atoms == 'e' ||
+        *atoms == 'd' ||
+        *atoms == 'u'
+    ) {
+        return true;
     }
+
+    return false;
 }
 
 /*56 - 59*/
-void V() {
-    if (c == 'i' || c == 'n' || c == 'r' || c == 's') {
-        c = getchar();
-        return;
+bool V() {
+    atoms++;
 
-    } else {
-        error();
-
+    if (
+        *atoms == 'i' ||
+        *atoms == 'n' ||
+        *atoms == 'r' ||
+        *atoms == 's'
+    ) {
+        return true;
     }
+
+    return false;
 }
 
 /*60 - 61*/
-void VP() {
-    if (c == 'i' || c == 'n') {
-        c = getchar();
-        return;
+bool VP() {
+    atoms++;
 
-    } else {
-        error();
-
+    if (
+        *atoms == 'i' ||
+        *atoms == 'n'
+    ) {
+        return true;
     }
+
+    return false;
 }
 
 /*62 - 63*/
-void V() {
-    if (c == 'i' || c == 'r') {
-        c = getchar();
-        return;
+bool VPP() {
+    atoms++;
 
-    } else {
-        error();
-
+    if (
+        *atoms == 'i' ||
+        *atoms == 'r'
+    ) {
+        return true;
     }
+
+    return false;
 }
 
 /*64 - 65*/
-void V() {
-    if (c == 'i' || c == 's') {
-        c = getchar();
-        return;
+bool VPPP() {
+    atoms++;
 
-    } else {
-        error();
-
+    if (
+        *atoms == 'i' ||
+        *atoms == 's'
+    ) {
+        return true;
     }
+
+    return false;
 }
 
 
 /*Proposiciones*/
 /*66 - 73*/
-void V() {
-    if (c == 'i') {
+bool P() {
+    if (*atoms == 'i') {
         A();
-        return;
+        return true;
 
-    } else if (c == 'f') {
+    } else if (*atoms == 'f') {
         I();
-        return;
+        return true;
 
-    } else if (c == 'h') {
+    } else if (*atoms == 'h') {
         H();
-        return;
+        return true;
 
-    } else if (c == 'w') {
+    } else if (*atoms == 'w') {
         W();
-        return;
+        return true;
 
-    } else if (c == 'j') {
+    } else if (*atoms == 'j') {
         J();
-        return;
+        return true;
 
-    } else if (c == '[') {
+    } else if (*atoms == '[') {
         Llama();
-        return;
+        return true;
 
-    } else if (c == 'z') {
+    } else if (*atoms == 'z') {
         Devuelve();
-        return;
+        return true;
 
-    } else if (c == 'c') {
-        c = getchar();
+    } else if (*atoms == 'c') {
+        atoms++;
 
-        if (c == ';') {
-            c = getchar();
-            return;
+        if (*atoms == ';') {
+            return true;
 
         } else {
-            error();
+            printf("Error, se esperaba un ;");
 
         }
-        return;
-
-    } else {
-        error();
-
     }
+
+    return false;
 }
 
 
 /* Lista de 0 más proposiciones*/
 /*74 - 75*/
-void ListaP() {
-    if (c == '}' || c == ':' || c == 't' || c == 'a' || c == 'o' || c == 'q') {
-        return;
-
-    } else if (c == 'i' || c == 'c' || c == 'w' || c == 'f' || c == 'j' || c == 'h' || c == 'z' || c == '[') {
-        P();
+bool ListaP() {
+    if (P()) {
         ListaP();
-        return;
-
-    } else {
-        error();
-
+        return true;
     }
+
+    return false;
 }
 
 
 /*Sentencia Loop*/
 /*76*/
-void W() {
-    if (c == 'w') {
-        c = getchar();
+bool W() {
+    atoms++;
 
-        if (c == '(') {
-            c = getchar();
-            R();
+    if (*atoms == 'w') {
+        atoms++;
 
-            if (c == ')') {
-                c = getchar();
+        if (*atoms == '(') {
 
-            } else {
-                error();
+            if (R()) {
+                atoms++;
 
+                if (*atoms == ')') {
+                    atoms++;
+
+                    if (*atoms == 'm') {
+                        atoms++;
+
+                        if (*atoms == '{') {
+                            ListaP();
+                            atoms++;
+
+                            if (*atoms == '}') {
+                                return true; 
+
+                            } else {
+                                printf("Error, se esperaba un }");
+                            }
+
+                        } else {
+                            printf("Error, se esperaba un {");
+                        }
+
+                    } else {
+                        printf("Error, se esperaba un m");
+                    }
+
+                } else {
+                    printf("Error, se esperaba un )");
+                }
             }
 
         } else {
-            error();
-
+            printf("Error, se esperaba un (");
         }
-
-        if (c == 'm') {
-            c = getchar();
-
-        } else {
-            error();
-
-        }
-
-        if (c == '{') {
-            c = getchar();
-            ListaP();
-
-            if (c == '}') {
-                c = getchar();
-
-            } else {
-                error();
-
-            }
-
-        } else {
-            error();
-
-        }
-        return;
-
+    
     } else {
-        error();
-
+        printf("Error, se esperaba un while");
     }
+
+    return false;
 }
 
 
 /*Sentencia Evaluate*/
 /*77*/
-void I() {
-    if (c == 'w') {
-        c = getchar();
+bool I() {
+    atoms++;
 
-        if (c == '(') {
-            c = getchar();
-            R();
+    if (*atoms == 'f') {
+        atoms++;
 
-            if (c == ')') {
-                c = getchar();
+        if (*atoms == '(') {
+            
+            if (R()) {
+                atoms++;
 
-            } else {
-                error();
+                if (*atoms == ')') {
+                    ListaP();
 
+                    if (IP()) {
+                        atoms++;
+
+                        if (*atoms == ':') {
+                            return true;
+
+                        } else {
+                            printf("Error, se esperaba un :");
+                        }
+                    }
+
+                } else {
+                    printf("Error, se esperaba )");
+                }
+            
             }
 
         } else {
-            error();
-
+            printf("Error, se esperaba un (");
         }
-
-        if (c == 'm') {
-            c = getchar();
-
-        } else {
-            error();
-
-        }
-
-        if (c == '{') {
-            c = getchar();
-            ListaP();
-
-            if (c == '}') {
-                c = getchar();
-
-            } else {
-                error();
-
-            }
-
-        } else {
-            error();
-
-        }
-        return;
 
     } else {
-        error();
-
+        printf("Error, se esperaba una f");
     }
 }
 
 
 /*78 - 79*/
-void IP() {
-    if (c == 't') {
-        c = getchar();
+bool IP() {
+    atoms++;
+
+    if (*atoms == 't') {
         ListaP();
-        return;
-
-    } else if (c == ':') {
-        return;
-
-    } else {
-        error();
-
+        return true;
     }
+
+    return false;
 }
 
 
 /*Sentencia Repeat*/
 /*80*/
-void J() {
-    if (c == 'j') {
-        c = getchar();
+bool J() {
+    atoms++;
 
-        if (c == '(') {
-            c = getchar();
+    if (*atoms == 'j') {
+        atoms++;
 
-        } else {
-            error();
+        if (*atoms == '(') {
+            
+            if (Y()) {
 
-        }
+                if (X()) {
 
-        Y();
-        X();
-        Z();
+                    if (Z()) {
+                        atoms++;
 
-        if (c == '(') {
-            c = getchar();
-            ListaP();
+                        if (*atoms == '{') {
 
-            if (c == ')') {
-                c = getchar();
+                            ListaP();
+                            atoms++;
 
-            } else {
-                error();
+                            if (*atoms == '}') {
+                                return true;
 
+                            } else {
+                                printf("Error, se esperaba un }");
+                            }
+
+                        } else {
+                            printf("Error, se esperaba un {");
+                        }
+                    }
+                }
             }
 
         } else {
-            error();
-
+            printf("Error, se esperaba un (");
         }
-        return;
 
     } else {
-        error();
+        printf("Error, se esperaba un j");
     }
+
+    return false;
 }
 
 /*81 - 82*/
-void Y() {
-    if (c == 'i') {
-        c = getchar();
+bool Y() {
+    atoms++; 
 
-        if (c == '=') {
-            c = getchar();
+    if (*atoms == 'i') {
+        atoms++;
+
+        if (*atoms == '=') {
+
+            if (E()) {
+                return true;
+            }
 
         } else {
-            error();
-
+            printf("Error, se esperaba un =");
         }
 
-        E();
-        return;
-
-    } else if (c == ';') {
-        c = getchar();
-        return;
+    } else if (*atoms == ';') {
+        return true;
 
     } else {
-        error();
-
+        printf("Error, se esperaba un i o ;");
     }
+
+    return false;
 }
 
 /*83 - 84*/
-void X() {
-    if (c == 'i' || c == 'n' || c == 'r' || c == 's') {
-        R();
-        return;
+bool X() {
+    if (R()) {
+        atoms++;
 
-    } else if (c == ';') {
-        c = getchar();
-        return;
+        if (*atoms == ';') {
+            return true;
+        }
+    } else if (*atoms == ';') {
+        return true;
 
     } else {
-        error();
-
+        printf("Error, se esperaba un ;");
     }
+
+    return false;
 }
 
 /*85 - 86*/
-void Z() {
-    if (c == 'i') {
-        c = getchar();
+bool Z() {
+    atoms++;
 
-        if (c == '=') {
-            c = getchar();
+    if (*atoms == 'i') {
+        atoms++;
+
+        if (*atoms == '=') {
+
+            if (E()) {
+                atoms++;
+
+                if (*atoms == ')') {
+                    return true;
+                
+                } else {
+                    printf("Error, se esperaba un )");
+                }
+            }
 
         } else {
-            error();
-
+            printf("Error, se esperaba un =");
         }
-
-        E();
-        return;
-
-    } else if (c == ')') {
-        c = getchar();
-        return;
-
+    
     } else {
-        error();
-
+        printf("Error, se esperaba un i");
     }
+
+    return false;
 }
 
 
 /*Sentencia Select*/
 /*87*/
-void H() {
-    if (c == 'h') {
-        c = getchar();
+bool H() {
+    atoms++;
 
-        if (c == '(') {
-            c = getchar();
+    if (*atoms == 'h') {
+        atoms++;
 
-            if (c == 'i') {
-                c = getchar();
+        if (*atoms == ')') {
+            atoms++;
+
+            if (*atoms == 'i') {
+                atoms++;
+
+                if (*atoms == ')') {
+                    atoms++;
+
+                    if (*atoms == '{') {
+                        CP();
+                        OP();
+                        atoms++;
+
+                        if (*atoms == '}') {
+                            return true;
+                        
+                        } else {
+                            printf("Error, se esperaaba un }");
+                        }
+
+                    } else {
+                        printf("Error, se esperaba un {");
+                    }
+
+                } else {
+                    printf("Error, se esperaba un )");
+                }
 
             } else {
-                error();
-            }
-
-            if (c == ')') {
-                c = getchar();
-
-            } else {
-                error();
+                printf("Error, se esperaba un i");
             }
 
         } else {
-            error();
+            printf("Error, se esperaba un (");
         }
-
-        if (c == '{') {
-            c = getchar();
-            CP();
-            OP();
-
-            if (c == '}') {
-                c = getchar();
-
-            } else {
-                error();
-            }
-
-        } else {
-            error();
-        }
-        return;
 
     } else {
-        error();
+        printf("Error, se esperaba un h");
     }
 }
 
 /*88 - 89*/
-void CP() {
-    if (c == 'a') {
-        c = getchar();
+bool CP() {
+    atoms++;
 
-        if (c == 'n') {
-            c = getchar();
+    if (*atoms == 'a') {
+        atoms++;
 
+        if (*atoms == 'n') {
+            atoms++;
+
+            if (*atoms == ':') {
+                
+                ListaP();
+                U();
+                CP();
+                return true;
+
+            } else {
+                printf("Error, se esperaba un :");
+            }   
         } else {
-            error();
+            printf("Error, se esperaba una n");
         }
-
-        if (c == ':') {
-            c = getchar();
-
-        } else {
-            error();
-        }
-
-        ListaP();
-        U();
-        CP();
-        return;
-
-    } else if (c == '}' || c == 'o') {
-        c = getchar();
-        return;
-
     } else {
-        error();
+        printf("Error, se esperaba una a");
     }
+
+    return false;
 }
 
 /*90 - 91*/
-void OP() {
-    if (c == 'o') {
-        c = getchar();
+bool OP() {
+    atoms++;
 
-        if (c == ':') {
-            c = getchar();
+    if (*atoms == 'o') {
+        atoms++;
 
+        if (*atoms == ':') {
+            atoms++;
+
+            ListaP();
+            return true;
+               
         } else {
-            error();
+            printf("Error, se esperaba un :");
         }
-
-        ListaP();
-        return;
-
-    } else if (c == '}') {
-        return;
-
     } else {
-        error();
+        printf("Error, se esperaba una o");
     }
+
+    return false;
 }
 
 /*92 - 93*/
-void U() {
-    if (c == 'q') {
-        c = getchar();
-        return;
+bool U() {
+    atoms++;
 
-    } else if (c == '}' || c == 'a' || c == 'o') {
-        return;
-
+    if (*atoms == 'q') {
+        return true;
     } else {
-        error();
+        printf("Error, se esperaba un q");
     }
+
+    return false;
 }
 
 
 /*Sentencia Throw*/
 /*94*/
-void Devuelve() {
-    if (c == 'z') {
-        c = getchar();
+bool Devuelve() {
+    atoms++;
 
-        if (c == '(') {
-            c = getchar();
+    if (*atoms == 'z') {
+        atoms++;
+
+        if (*atoms == '(') {
             Valor();
+            atoms++;
 
-            if (c == ')') {
-                c = getchar();
+            if (*atoms == ')') {
+                atoms++;
+
+                if (*atoms == ';') {
+                    return true;
+
+                } else {
+                    printf("Error, se esperaba un ;");
+                }
 
             } else {
-                error();
+                printf("Error, se esperaba un )");
             }
 
         } else {
-            error();
+            printf("Error, se esperaba un (");
         }
-
-        if (c == ;) {
-            c = getchar();
-
-        } else {
-            error();
-        }
-        return;
-
+        
     } else {
-        error();
+        printf("Error, se esperaba un z");
     }
+
+    return false;
 }
 
 /*95 - 96*/
-void Valor() {
-    if (c == 'i' || c == 'n' || c == 'r' || c == 's') {
-        V();
-        return;
-
-    } else if (c == ')') {
-        return;
-
-    } else {
-        error();
-    }
+bool Valor() {
+    return V();
 }
 
 /*Llama a una funcion*/
 /*97*/
-void Llama() {
-    if (c == '[') {
-        c = getchar();
+bool Llama() {
+    atoms++;
 
-        if (c == 'i') {
-            c == getchar();
+    if (*atoms == '[') {
+        atoms++;
 
-        } else {
-            error();
-        }
+        if (*atoms == 'i') {
+            atoms++;
 
-        if (c == '(') {
-            c = getchar();
-            Arg();
+            if (*atoms == '(') {
+                
+                Arg();
+                atoms++;
 
-            if (c == ')') {
-                c = getchar();
+                if (*atoms == ')') {
+                    atoms++;
+
+                    if (*atoms == ']') {
+                        return true;
+
+                    } else {
+                        printf("Error, se esperaba un ]");
+                    }
+
+                } else {
+                    printf("Error, se esperaba un )");
+                }
 
             } else {
-                error();
+                printf("Error, se esperaba un (");    
             }
 
         } else {
-            error();
+            printf("Error, se esperaba un identificador");
         }
-
-        if (c == ']') {
-            c == getchar();
-
-        } else {
-            error();
-        }
-
-        return;
 
     } else {
-        error();
+        printf("Error, se esperaba un [");
     }
+
+    return false;
 }
 
 /*98 - 99*/
-void Arg() {
-    if (c == ')') {
-        return;
+bool Arg() {
+    V();
+    otroArg();
 
-    } else if (c == 'i' || c == 'n' || c == 'r' || c == 's') {
-        V();
-        otroArg();
-        return;
-
-    } else {
-        error();
-    }
+    return true;
 }
 
 /*100 - 101*/
-void otroArg() {
-    if (c == ',') {
-        c = getchar();
-        v();
-        otroArg();
-        return;
+bool otroArg() {
+    atoms++;
 
-    } else if (c == ')') {
-        return;
+    if (*atoms == ',') {
+
+        V();
+        otroArg();
+
+        return true;
 
     } else {
-        error();
+        printf("Error, se esperaba un ,");
     }
+
+    return false;   
 }
