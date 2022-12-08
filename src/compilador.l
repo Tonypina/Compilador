@@ -265,7 +265,7 @@ int main (int argc, char *argv[]) {
             SLL_MakeEmpty(TABLA_CTESCADENAS);
 
             yylex();
-
+                    
             Program();
         }
     }
@@ -300,7 +300,6 @@ void imprimirTablas() {
     SLL_Print(TABLA_CTESCADENAS, archSal);
     fprintf(archSal, "\n-------Tabla de Operadores Relacionales--------\n");
     SLL_Print(TABLA_OPRELACIONALES, archSal);
-    SLL_Print(TABLA_CTESCADENAS, archSal);
     fprintf(archSal, "\n-------Cadena de Átomos--------\n");
     fprintf(archSal, "%s", atoms);
 }
@@ -502,21 +501,23 @@ bool OtraFunc() {
 bool Func() {
     
     if (Tipo()){
-        atoms++;
 
         if (*atoms == 'i') {
             atoms++;
 
             if (*atoms == '(') {
+                atoms++;
                 Param();
 
                 if (*atoms == ')') {
                     atoms++;
 
                     if (*atoms == '{') {
+                        atoms++;
                         Cuerpo();
 
                         if (*atoms == '}') {
+                            atoms++;
                             return true;
 
                         } else {
@@ -549,9 +550,9 @@ bool Func() {
 /*5 - 6*/
 bool Param() {
     if (Tipo()) {
-        atoms++;
 
         if (*atoms == 'i') {
+            atoms++;
             OtroParam();
             return true;
 
@@ -566,13 +567,14 @@ bool Param() {
 
 /*7 - 8*/
 bool OtroParam() {
-    atoms++;
 
     if (*atoms == ',') {
+        atoms++;
+
         if (Tipo()) {
-            atoms++;
 
             if (*atoms == 'i') {
+                atoms++;
                 OtroParam();
                 return true;
 
@@ -609,9 +611,10 @@ bool Decl() {
 bool D() {
     if (Tipo()) {
         if (K()) {
-            atoms++;
+            // atoms++;
 
             if (*atoms == ';') {
+                atoms++;
                 return true;
             
             } else {
@@ -625,13 +628,14 @@ bool D() {
 
 /*13 - 17*/
 bool Tipo() {
-    atoms++;
 
     if (*atoms == 'b' ||
         *atoms == 'g' ||
         *atoms == '#' ||
         *atoms == 'y' ||
         *atoms == 'x' ) {
+        
+        atoms++;
         return true;
 
     } else {
@@ -643,9 +647,10 @@ bool Tipo() {
 
 /*18*/
 bool K() {
-    atoms++;
+    // atoms++;
 
     if (*atoms == 'i') {
+        atoms++;
         Q();
         return true;
 
@@ -658,9 +663,10 @@ bool K() {
 
 /*19 - 21*/
 bool Q() {
-    atoms++;
+    // atoms++;
 
     if (*atoms == '=') {
+        atoms++;
         if (N()) {
             C();
             return true;
@@ -670,6 +676,7 @@ bool Q() {
         }
 
     } else if (*atoms == ',') {
+        atoms++;
         if (K()) {
             return true;
         }
@@ -681,13 +688,14 @@ bool Q() {
 
 /*22 - 24*/
 bool N() {
-    atoms++;
+    // atoms++;
 
     if (
         *atoms == 'n' ||
         *atoms == 'r' ||
         *atoms == 's'
     ) {
+        atoms++;
         return true;
 
     } else {
@@ -699,9 +707,10 @@ bool N() {
 
 /*25 - 26*/
 bool C() {
-    atoms++;
+    // atoms++;
 
     if (*atoms == ',') {
+        atoms++;
         if (K()) {
             return true;
         }
@@ -714,16 +723,18 @@ bool C() {
 /*Sentencia de Asignacion*/
 /*27*/
 bool A() {
-    atoms++;
+    // atoms++;
 
     if (*atoms == 'i') {
         atoms++;
 
         if (*atoms == '=') {
+            atoms++;
             if (AP()) {
-                atoms++;
+                // atoms++;
 
                 if (*atoms == ';') {
+                    atoms++;
                     return true;
 
                 } else {
@@ -743,9 +754,10 @@ bool A() {
 
 /*28 - 29*/
 bool AP() {
-    atoms++;
+    // atoms++;
 
     if (*atoms == 's') {
+        atoms++;
         return true;
     
     } else if (E()) {
@@ -773,11 +785,12 @@ bool E() {
 
 /*31 - 33*/
 bool EP() {
-    atoms++;
+    // atoms++;
 
     if (*atoms == '+' ||
         *atoms == '-'
     ) {
+        atoms++;
         if (T()) {
             EP();
             return true;
@@ -799,7 +812,7 @@ bool T() {
 
 /*35 - 40*/
 bool TP() {
-    atoms++;
+    // atoms++;
 
     if (*atoms == '*' ||
         *atoms == '/' ||    
@@ -807,6 +820,7 @@ bool TP() {
         *atoms == '%' ||    
         *atoms == '^'
     ) {
+        atoms++;
         if (F()) {
             TP();
             return true;
@@ -822,13 +836,15 @@ bool TP() {
 
 /*41 - 44*/
 bool F() {
-    atoms++;
+    // atoms++;
 
     if (*atoms == '(') {
+        atoms++;
         if (E()) {
-            atoms++;
+            // atoms++;
 
             if (*atoms == ')') {
+                atoms++;
                 return true;
             
             } else {
@@ -840,6 +856,7 @@ bool F() {
                *atoms == 'n' ||
                *atoms == 'r'
     ) {
+        atoms++;
         return true;
     
     } else {
@@ -855,9 +872,10 @@ bool F() {
 /*Expresion Relacional*/
 /*46 - 49*/
 bool R() {
-    atoms++;
+    // atoms++;
     
     if (*atoms == 'i') {
+        atoms++;
         if (RP()) {
             if (V()) {
                 return true;
@@ -866,6 +884,7 @@ bool R() {
     }
     
     else if (*atoms == 'n') {
+        atoms++;
         if (RP()) {
             if (VP()) {
                 return true;
@@ -874,6 +893,7 @@ bool R() {
     }
     
     else if (*atoms == 'r') {
+        atoms++;
         if (RP()) {
             if (VPP()) {
                 return true;
@@ -882,6 +902,7 @@ bool R() {
     }
     
     else if (*atoms == 's') {
+        atoms++;
         if (RP()) {
             if (VPPP()) {
                 return true;
@@ -894,7 +915,7 @@ bool R() {
 
 /*50 - 55*/
 bool RP() {
-    atoms++;
+    // atoms++;
 
     if (
         *atoms == '>' ||
@@ -904,6 +925,7 @@ bool RP() {
         *atoms == 'd' ||
         *atoms == 'u'
     ) {
+        atoms++;
         return true;
     }
 
@@ -920,6 +942,7 @@ bool V() {
         *atoms == 'r' ||
         *atoms == 's'
     ) {
+        atoms++;
         return true;
     }
 
@@ -928,12 +951,13 @@ bool V() {
 
 /*60 - 61*/
 bool VP() {
-    atoms++;
+    // atoms++;
 
     if (
         *atoms == 'i' ||
         *atoms == 'n'
     ) {
+        atoms++;
         return true;
     }
 
@@ -942,12 +966,13 @@ bool VP() {
 
 /*62 - 63*/
 bool VPP() {
-    atoms++;
+    // atoms++;
 
     if (
         *atoms == 'i' ||
         *atoms == 'r'
     ) {
+        atoms++;
         return true;
     }
 
@@ -956,12 +981,13 @@ bool VPP() {
 
 /*64 - 65*/
 bool VPPP() {
-    atoms++;
+    // atoms++;
 
     if (
         *atoms == 'i' ||
         *atoms == 's'
     ) {
+        atoms++;
         return true;
     }
 
@@ -973,30 +999,37 @@ bool VPPP() {
 /*66 - 73*/
 bool P() {
     if (*atoms == 'i') {
+        atoms++;
         A();
         return true;
 
     } else if (*atoms == 'f') {
+        atoms++;
         I();
         return true;
 
     } else if (*atoms == 'h') {
+        atoms++;
         H();
         return true;
 
     } else if (*atoms == 'w') {
+        atoms++;
         W();
         return true;
 
     } else if (*atoms == 'j') {
+        atoms++;
         J();
         return true;
 
     } else if (*atoms == '[') {
+        atoms++;
         Llama();
         return true;
 
     } else if (*atoms == 'z') {
+        atoms++;
         Devuelve();
         return true;
 
@@ -1004,6 +1037,7 @@ bool P() {
         atoms++;
 
         if (*atoms == ';') {
+            atoms++;
             return true;
 
         } else {
@@ -1031,15 +1065,16 @@ bool ListaP() {
 /*Sentencia Loop*/
 /*76*/
 bool W() {
-    atoms++;
+    // atoms++;
 
     if (*atoms == 'w') {
         atoms++;
 
         if (*atoms == '(') {
+            atoms++;
 
             if (R()) {
-                atoms++;
+                // atoms++;
 
                 if (*atoms == ')') {
                     atoms++;
@@ -1048,10 +1083,11 @@ bool W() {
                         atoms++;
 
                         if (*atoms == '{') {
-                            ListaP();
                             atoms++;
+                            ListaP();
 
                             if (*atoms == '}') {
+                                atoms++;
                                 return true; 
 
                             } else {
@@ -1086,23 +1122,26 @@ bool W() {
 /*Sentencia Evaluate*/
 /*77*/
 bool I() {
-    atoms++;
+    // atoms++;
 
     if (*atoms == 'f') {
         atoms++;
 
         if (*atoms == '(') {
-            
+            atoms++;
+
             if (R()) {
-                atoms++;
+                // atoms++;
 
                 if (*atoms == ')') {
+                    atoms++;
                     ListaP();
 
                     if (IP()) {
-                        atoms++;
+                        // atoms++;
 
                         if (*atoms == ':') {
+                            atoms++;
                             return true;
 
                         } else {
@@ -1128,9 +1167,10 @@ bool I() {
 
 /*78 - 79*/
 bool IP() {
-    atoms++;
+    // atoms++;
 
     if (*atoms == 't') {
+        atoms++;
         ListaP();
         return true;
     }
@@ -1142,26 +1182,28 @@ bool IP() {
 /*Sentencia Repeat*/
 /*80*/
 bool J() {
-    atoms++;
+    // atoms++;
 
     if (*atoms == 'j') {
         atoms++;
 
         if (*atoms == '(') {
-            
+            atoms++;
+
             if (Y()) {
 
                 if (X()) {
 
                     if (Z()) {
-                        atoms++;
+                        // atoms++;
 
                         if (*atoms == '{') {
-
-                            ListaP();
                             atoms++;
 
+                            ListaP();
+
                             if (*atoms == '}') {
+                                atoms++;
                                 return true;
 
                             } else {
@@ -1188,12 +1230,13 @@ bool J() {
 
 /*81 - 82*/
 bool Y() {
-    atoms++; 
+    // atoms++; 
 
     if (*atoms == 'i') {
         atoms++;
 
         if (*atoms == '=') {
+            atoms++;
 
             if (E()) {
                 return true;
@@ -1204,6 +1247,7 @@ bool Y() {
         }
 
     } else if (*atoms == ';') {
+        atoms++;
         return true;
 
     } else {
@@ -1216,12 +1260,14 @@ bool Y() {
 /*83 - 84*/
 bool X() {
     if (R()) {
-        atoms++;
+        // atoms++;
 
         if (*atoms == ';') {
+            atoms++;
             return true;
         }
     } else if (*atoms == ';') {
+        atoms++;
         return true;
 
     } else {
@@ -1233,17 +1279,18 @@ bool X() {
 
 /*85 - 86*/
 bool Z() {
-    atoms++;
+    // atoms++;
 
     if (*atoms == 'i') {
         atoms++;
 
         if (*atoms == '=') {
+            atoms++;
 
             if (E()) {
-                atoms++;
 
                 if (*atoms == ')') {
+                    atoms++;
                     return true;
                 
                 } else {
@@ -1266,7 +1313,7 @@ bool Z() {
 /*Sentencia Select*/
 /*87*/
 bool H() {
-    atoms++;
+    // atoms++;
 
     if (*atoms == 'h') {
         atoms++;
@@ -1281,11 +1328,12 @@ bool H() {
                     atoms++;
 
                     if (*atoms == '{') {
+                        atoms++;
                         CP();
                         OP();
-                        atoms++;
 
                         if (*atoms == '}') {
+                            atoms++;
                             return true;
                         
                         } else {
@@ -1315,7 +1363,7 @@ bool H() {
 
 /*88 - 89*/
 bool CP() {
-    atoms++;
+    // atoms++;
 
     if (*atoms == 'a') {
         atoms++;
@@ -1324,7 +1372,8 @@ bool CP() {
             atoms++;
 
             if (*atoms == ':') {
-                
+                atoms++;
+
                 ListaP();
                 U();
                 CP();
@@ -1345,7 +1394,7 @@ bool CP() {
 
 /*90 - 91*/
 bool OP() {
-    atoms++;
+    // atoms++;
 
     if (*atoms == 'o') {
         atoms++;
@@ -1368,9 +1417,10 @@ bool OP() {
 
 /*92 - 93*/
 bool U() {
-    atoms++;
+    // atoms++;
 
     if (*atoms == 'q') {
+        atoms++;
         return true;
     } else {
         printf("Error, se esperaba un q\n");
@@ -1383,19 +1433,20 @@ bool U() {
 /*Sentencia Throw*/
 /*94*/
 bool Devuelve() {
-    atoms++;
+    // atoms++;
 
     if (*atoms == 'z') {
         atoms++;
 
         if (*atoms == '(') {
-            Valor();
             atoms++;
+            Valor();
 
             if (*atoms == ')') {
                 atoms++;
 
                 if (*atoms == ';') {
+                    atoms++;
                     return true;
 
                 } else {
@@ -1425,7 +1476,7 @@ bool Valor() {
 /*Llama a una funcion*/
 /*97*/
 bool Llama() {
-    atoms++;
+    // atoms++;
 
     if (*atoms == '[') {
         atoms++;
@@ -1434,14 +1485,15 @@ bool Llama() {
             atoms++;
 
             if (*atoms == '(') {
+                atoms++;
                 
                 Arg();
-                atoms++;
 
                 if (*atoms == ')') {
                     atoms++;
 
                     if (*atoms == ']') {
+                        atoms++;
                         return true;
 
                     } else {
@@ -1477,10 +1529,11 @@ bool Arg() {
 
 /*100 - 101*/
 bool otroArg() {
-    atoms++;
+    // atoms++;
 
     if (*atoms == ',') {
-
+        atoms++;
+        
         V();
         otroArg();
 
