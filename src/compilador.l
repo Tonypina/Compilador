@@ -265,6 +265,8 @@ int main (int argc, char *argv[]) {
             SLL_MakeEmpty(TABLA_CTESCADENAS);
 
             yylex();
+
+            Program();
         }
     }
 
@@ -475,10 +477,14 @@ Token tokenOperadorAsignacion( char* s ) {
 /*1*/
 bool Program() {
 
-    Func();
-    OtraFunc();
+    if (Func()) {
+        if (OtraFunc()) {
+            printf("El programa compiló\n\n");
+            return true;
+        }
+    }
 
-    return true;
+    printf("Error de parser\n\n");
 }
 
 /*2 - 3*/
@@ -514,27 +520,27 @@ bool Func() {
                             return true;
 
                         } else {
-                            printf("Error, se esperaba }");
+                            printf("Error, se esperaba }\n");
                         }
 
                     } else {
-                        printf("Error, se esperaba {");
+                        printf("Error, se esperaba {\n");
                     }
 
                 } else {
-                    printf("Error, se esperaba )");
+                    printf("Error, se esperaba )\n");
                 }
 
             } else {
-                printf("Error, se esperaba (");
+                printf("Error, se esperaba (\n");
             }
 
         } else {
-            printf("Error, se esperaba un identificador.");
+            printf("Error, se esperaba un identificador.\n");
         }
 
     } else {
-        printf("Se esperaba el tipo de la función.");
+        printf("Se esperaba el tipo de la función.\n");
     }
 
     return false;
@@ -550,7 +556,7 @@ bool Param() {
             return true;
 
         } else {
-            printf("Error, se esperaba un identificador.");
+            printf("Error, se esperaba un identificador.\n");
         }
     }
 
@@ -571,10 +577,10 @@ bool OtroParam() {
                 return true;
 
             } else {
-                printf("Error, se esperaba un identificador.");
+                printf("Error, se esperaba un identificador.\n");
             }     
         } else {
-            printf("Error, se esperaba el tipo de dato.");
+            printf("Error, se esperaba el tipo de dato.\n");
         }
     }
 
@@ -609,7 +615,7 @@ bool D() {
                 return true;
             
             } else {
-                printf("Error, se esperaba ;");
+                printf("Error, se esperaba ;\n");
             }
         }
     }
@@ -629,7 +635,7 @@ bool Tipo() {
         return true;
 
     } else {
-        printf("Error, se esperaba un tipo de dato válido.");
+        printf("Error, se esperaba un tipo de dato válido.\n");
     }
 
     return false;
@@ -644,7 +650,7 @@ bool K() {
         return true;
 
     } else {
-        printf("Error, se esperaba un identificador.");
+        printf("Error, se esperaba un identificador.\n");
     }
 
     return false;
@@ -660,7 +666,7 @@ bool Q() {
             return true;
         
         } else  {
-            printf("Error, se esperaba un valor.");
+            printf("Error, se esperaba un valor.\n");
         }
 
     } else if (*atoms == ',') {
@@ -685,7 +691,7 @@ bool N() {
         return true;
 
     } else {
-        printf("Error, se esperaba un valor para el dato.");
+        printf("Error, se esperaba un valor para el dato.\n");
     }
 
     return false;
@@ -721,15 +727,15 @@ bool A() {
                     return true;
 
                 } else {
-                    printf("Error, se esperaba un ;");
+                    printf("Error, se esperaba un ;\n");
                 }
             }
         } else {
-            printf("Error, se esperaba un =");
+            printf("Error, se esperaba un =\n");
         }
 
     } else {
-        printf("Error, se esperaba un identificador.");
+        printf("Error, se esperaba un identificador.\n");
     }
 
     return false;
@@ -759,7 +765,7 @@ bool E() {
         return true;
     } else {
 
-        printf("Error, expresión incorrecta.");
+        printf("Error, expresión incorrecta.\n");
     }
 
     return false;
@@ -807,7 +813,7 @@ bool TP() {
         }
 
     } else {
-        printf("Error, se esperaba un operador aritmetico.");
+        printf("Error, se esperaba un operador aritmetico.\n");
     }
 
     return false;
@@ -826,7 +832,7 @@ bool F() {
                 return true;
             
             } else {
-                printf("Error, se esperaba )");
+                printf("Error, se esperaba )\n");
             }
         }
 
@@ -1001,7 +1007,7 @@ bool P() {
             return true;
 
         } else {
-            printf("Error, se esperaba un ;");
+            printf("Error, se esperaba un ;\n");
 
         }
     }
@@ -1049,28 +1055,28 @@ bool W() {
                                 return true; 
 
                             } else {
-                                printf("Error, se esperaba un }");
+                                printf("Error, se esperaba un }\n");
                             }
 
                         } else {
-                            printf("Error, se esperaba un {");
+                            printf("Error, se esperaba un {\n");
                         }
 
                     } else {
-                        printf("Error, se esperaba un m");
+                        printf("Error, se esperaba un m\n");
                     }
 
                 } else {
-                    printf("Error, se esperaba un )");
+                    printf("Error, se esperaba un )\n");
                 }
             }
 
         } else {
-            printf("Error, se esperaba un (");
+            printf("Error, se esperaba un (\n");
         }
     
     } else {
-        printf("Error, se esperaba un while");
+        printf("Error, se esperaba un while\n");
     }
 
     return false;
@@ -1100,22 +1106,22 @@ bool I() {
                             return true;
 
                         } else {
-                            printf("Error, se esperaba un :");
+                            printf("Error, se esperaba un :\n");
                         }
                     }
 
                 } else {
-                    printf("Error, se esperaba )");
+                    printf("Error, se esperaba )\n");
                 }
             
             }
 
         } else {
-            printf("Error, se esperaba un (");
+            printf("Error, se esperaba un (\n");
         }
 
     } else {
-        printf("Error, se esperaba una f");
+        printf("Error, se esperaba una f\n");
     }
 }
 
@@ -1159,22 +1165,22 @@ bool J() {
                                 return true;
 
                             } else {
-                                printf("Error, se esperaba un }");
+                                printf("Error, se esperaba un }\n");
                             }
 
                         } else {
-                            printf("Error, se esperaba un {");
+                            printf("Error, se esperaba un {\n");
                         }
                     }
                 }
             }
 
         } else {
-            printf("Error, se esperaba un (");
+            printf("Error, se esperaba un (\n");
         }
 
     } else {
-        printf("Error, se esperaba un j");
+        printf("Error, se esperaba un j\n");
     }
 
     return false;
@@ -1194,14 +1200,14 @@ bool Y() {
             }
 
         } else {
-            printf("Error, se esperaba un =");
+            printf("Error, se esperaba un =\n");
         }
 
     } else if (*atoms == ';') {
         return true;
 
     } else {
-        printf("Error, se esperaba un i o ;");
+        printf("Error, se esperaba un i o ;\n");
     }
 
     return false;
@@ -1219,7 +1225,7 @@ bool X() {
         return true;
 
     } else {
-        printf("Error, se esperaba un ;");
+        printf("Error, se esperaba un ;\n");
     }
 
     return false;
@@ -1241,16 +1247,16 @@ bool Z() {
                     return true;
                 
                 } else {
-                    printf("Error, se esperaba un )");
+                    printf("Error, se esperaba un )\n");
                 }
             }
 
         } else {
-            printf("Error, se esperaba un =");
+            printf("Error, se esperaba un =\n");
         }
     
     } else {
-        printf("Error, se esperaba un i");
+        printf("Error, se esperaba un i\n");
     }
 
     return false;
@@ -1283,27 +1289,27 @@ bool H() {
                             return true;
                         
                         } else {
-                            printf("Error, se esperaaba un }");
+                            printf("Error, se esperaaba un }\n");
                         }
 
                     } else {
-                        printf("Error, se esperaba un {");
+                        printf("Error, se esperaba un {\n");
                     }
 
                 } else {
-                    printf("Error, se esperaba un )");
+                    printf("Error, se esperaba un )\n");
                 }
 
             } else {
-                printf("Error, se esperaba un i");
+                printf("Error, se esperaba un i\n");
             }
 
         } else {
-            printf("Error, se esperaba un (");
+            printf("Error, se esperaba un (\n");
         }
 
     } else {
-        printf("Error, se esperaba un h");
+        printf("Error, se esperaba un h\n");
     }
 }
 
@@ -1325,13 +1331,13 @@ bool CP() {
                 return true;
 
             } else {
-                printf("Error, se esperaba un :");
+                printf("Error, se esperaba un :\n");
             }   
         } else {
-            printf("Error, se esperaba una n");
+            printf("Error, se esperaba una n\n");
         }
     } else {
-        printf("Error, se esperaba una a");
+        printf("Error, se esperaba una a\n");
     }
 
     return false;
@@ -1351,10 +1357,10 @@ bool OP() {
             return true;
                
         } else {
-            printf("Error, se esperaba un :");
+            printf("Error, se esperaba un :\n");
         }
     } else {
-        printf("Error, se esperaba una o");
+        printf("Error, se esperaba una o\n");
     }
 
     return false;
@@ -1367,7 +1373,7 @@ bool U() {
     if (*atoms == 'q') {
         return true;
     } else {
-        printf("Error, se esperaba un q");
+        printf("Error, se esperaba un q\n");
     }
 
     return false;
@@ -1393,19 +1399,19 @@ bool Devuelve() {
                     return true;
 
                 } else {
-                    printf("Error, se esperaba un ;");
+                    printf("Error, se esperaba un ;\n");
                 }
 
             } else {
-                printf("Error, se esperaba un )");
+                printf("Error, se esperaba un )\n");
             }
 
         } else {
-            printf("Error, se esperaba un (");
+            printf("Error, se esperaba un (\n");
         }
         
     } else {
-        printf("Error, se esperaba un z");
+        printf("Error, se esperaba un z\n");
     }
 
     return false;
@@ -1439,23 +1445,23 @@ bool Llama() {
                         return true;
 
                     } else {
-                        printf("Error, se esperaba un ]");
+                        printf("Error, se esperaba un ]\n");
                     }
 
                 } else {
-                    printf("Error, se esperaba un )");
+                    printf("Error, se esperaba un )\n");
                 }
 
             } else {
-                printf("Error, se esperaba un (");    
+                printf("Error, se esperaba un (\n");    
             }
 
         } else {
-            printf("Error, se esperaba un identificador");
+            printf("Error, se esperaba un identificador\n");
         }
 
     } else {
-        printf("Error, se esperaba un [");
+        printf("Error, se esperaba un [\n");
     }
 
     return false;
@@ -1481,7 +1487,7 @@ bool otroArg() {
         return true;
 
     } else {
-        printf("Error, se esperaba un ,");
+        printf("Error, se esperaba un ,\n");
     }
 
     return false;   
