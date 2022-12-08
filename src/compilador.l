@@ -343,17 +343,17 @@ Token tokenPalabraReservada( char* palabra ) {
 Token tokenIdentificadores( char* id ) {
 
     Token token_aux;
+    token_aux.class = 1;
 
     // Si ya existe
     if (SLL_Search(TABLA_IDENTIFICADORES, id)) {
 
-        fprintf(archSal, "ERR: \"%s\" ya existe. ", id);
-        token_aux.class = -1;
-        token_aux.val = -1;
+        fprintf(archSal, "ERR: \"%s\" ya existe. \n", id);
+        token_aux.val = TABLA_OPRELACIONALES->cursor->pos;
+        atoms = append(atoms, IDENT_ATOM); 
         return token_aux;
     }
 
-    token_aux.class = 1;
     token_aux.val = SLL_Len(TABLA_IDENTIFICADORES);
 
     atoms = append(atoms, IDENT_ATOM);
