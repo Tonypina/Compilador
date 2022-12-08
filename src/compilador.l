@@ -24,6 +24,19 @@
     #define CTECAD_ATOM 's'
     #define IGUAL_ATOM  '='
 
+    /* Clases para los tokens (No magic numbers) */
+    enum CLASS{
+        CLASS_0,
+        CLASS_1,
+        CLASS_2,
+        CLASS_3,
+        CLASS_4,
+        CLASS_5,
+        CLASS_6,
+        CLASS_7,
+        CLASS_8
+    };
+
     /* Archivo de entrada y salida */
     FILE *yyin;
     FILE *archSal;
@@ -264,6 +277,8 @@ int main (int argc, char *argv[]) {
             SLL_MakeEmpty(TABLA_CTESREALES);
             SLL_MakeEmpty(TABLA_CTESCADENAS);
 
+            fprintf(archSal, "\n-------Lista de Tokens--------\n");
+
             yylex();
 
             fprintf(archSal, "\n-------Cadena de Átomos--------\n");
@@ -324,7 +339,7 @@ Token tokenPalabraReservada( char* palabra ) {
 
     // Si está en la tabla
     if (SLL_Search(TABLA_PALRESERVADAS, palabra)) {
-        aux.class = 0;
+        aux.class = CLASS_0;
         aux.val = TABLA_PALRESERVADAS->cursor->pos;
 
         atoms = append(atoms, TABLA_PALRESERVADAS->cursor->atom);
@@ -343,7 +358,7 @@ Token tokenPalabraReservada( char* palabra ) {
 Token tokenIdentificadores( char* id ) {
 
     Token token_aux;
-    token_aux.class = 1;
+    token_aux.class = CLASS_1;
 
     // Si ya existe
     if (SLL_Search(TABLA_IDENTIFICADORES, id)) {
@@ -368,8 +383,9 @@ Token tokenConstantesNumericas( char* cte ) {
 
     Token token_aux;
 
-    token_aux.class = 2;
+    token_aux.class = CLASS_2;
     token_aux.val = SLL_Len(TABLA_CTESNUMERICAS);
+    // token_aux.val = cte[0] + 0;
 
     atoms = append(atoms, CTENUM_ATOM);
 
@@ -383,7 +399,7 @@ Token tokenConstantesReales( char* cte ) {
 
     Token token_aux;
 
-    token_aux.class = 3;
+    token_aux.class = CLASS_3;
     token_aux.val = SLL_Len(TABLA_CTESREALES);
 
     atoms = append(atoms, CTEREA_ATOM);
@@ -398,7 +414,7 @@ Token tokenConstantesCadenas( char* cte ) {
 
     Token token_aux;
 
-    token_aux.class = 4;
+    token_aux.class = CLASS_4;
     token_aux.val = SLL_Len(TABLA_CTESCADENAS);
 
     atoms = append(atoms, CTECAD_ATOM);
@@ -413,7 +429,7 @@ Token tokenSimbolosEspeciales( char* s ) {
 
     Token token_aux;
 
-    token_aux.class = 5;
+    token_aux.class = CLASS_5;
 
     // Se envía el ASCII
     token_aux.val = s[0] + 0;
@@ -428,7 +444,7 @@ Token tokenOperadoresAritmeticos( char* s ) {
 
     Token token_aux;
 
-    token_aux.class = 6;
+    token_aux.class = CLASS_6;
 
     // Se envía el ASCII
     token_aux.val = s[0] + 0;
@@ -444,7 +460,7 @@ Token tokenOperadoresRelacionales( char* s ) {
     Token token_aux;
 
     if (SLL_Search(TABLA_OPRELACIONALES, s)) {
-        token_aux.class = 7;
+        token_aux.class = CLASS_7;
         token_aux.val = TABLA_OPRELACIONALES->cursor->pos;
 
         atoms = append(atoms, TABLA_OPRELACIONALES->cursor->atom);
@@ -464,7 +480,7 @@ Token tokenOperadorAsignacion( char* s ) {
 
     Token token_aux;
 
-    token_aux.class = 8;
+    token_aux.class = CLASS_8;
 
     // Se envía el ASCII
     token_aux.val = s[0] + 0;
@@ -540,7 +556,7 @@ bool Func() {
             }
 
         } else {
-            printf("Error, se esperaba un identificador.\n");
+            printf("Error, se esperaba un identificador de la función.\n");
         }
 
     } else {
@@ -597,6 +613,7 @@ bool Cuerpo() {
 
     Decl();
     ListaP();
+
 }
 
 /*10 - 11*/
@@ -798,6 +815,9 @@ bool EP() {
             EP();
             return true;
         }
+
+    } else {
+        printf("Error, se esperaba un error aritmético.");
     }
 
     return false;
@@ -829,8 +849,6 @@ bool TP() {
             return true;
         }
 
-    } else {
-        printf("Error, se esperaba un operador aritmetico.\n");
     }
 
     return false;
@@ -1001,39 +1019,26 @@ bool VPPP() {
 /*Proposiciones*/
 /*66 - 73*/
 bool P() {
-    if (*atoms == 'i') {
-        atoms++;
-        A();
+    // atoms++;
+    if (A()) {
         return true;
 
-    } else if (*atoms == 'f') {
-        atoms++;
-        I();
+    } else if (I()) {
         return true;
 
-    } else if (*atoms == 'h') {
-        atoms++;
-        H();
+    } else if (H()) {
         return true;
 
-    } else if (*atoms == 'w') {
-        atoms++;
-        W();
+    } else if (W()) {
         return true;
 
-    } else if (*atoms == 'j') {
-        atoms++;
-        J();
+    } else if (J()) {
         return true;
 
-    } else if (*atoms == '[') {
-        atoms++;
-        Llama();
+    } else if (Llama()) {
         return true;
 
-    } else if (*atoms == 'z') {
-        atoms++;
-        Devuelve();
+    } else if (Devuelve()) {
         return true;
 
     } else if (*atoms == 'c') {
@@ -1165,6 +1170,8 @@ bool I() {
     } else {
         printf("Error, se esperaba una f\n");
     }
+
+    return false;
 }
 
 
@@ -1362,6 +1369,8 @@ bool H() {
     } else {
         printf("Error, se esperaba un h\n");
     }
+
+    return false;
 }
 
 /*88 - 89*/
