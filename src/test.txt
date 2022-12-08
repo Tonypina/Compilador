@@ -1,3 +1,5 @@
+number $main () {
 big $Grande=2, $num;
 real $numReal;
 symbol $cad="cadena#1", $cadVacia
+}
