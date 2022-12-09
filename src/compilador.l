@@ -1,6 +1,6 @@
 /* Fecha: 02 / 11 / 2022 */
 
-/* El programa realiza un análisis léxico para un lenguaje definido     */
+/* El programa realiza un análisis léxico y sintáctico para un lenguaje definido     */
 /* anteriormente, es decir, servirá de primera parte para el compilador */
 /* de dicho lenguaje.                                                   */
 
@@ -122,6 +122,7 @@
 
     /* Declaración de la cadena de átomos */
     char* atoms = "";
+    int atoms_i = 0;
 
     /* Declaración de las funciones que crean tokens */
     Token tokenPalabraReservada(char* palabra);
@@ -398,7 +399,11 @@ Token tokenConstantesNumericas( char* cte ) {
     Token token_aux;
 
     token_aux.class = CLASS_2;
-    token_aux.val = SLL_Len(TABLA_CTESNUMERICAS);
+
+    if (cte[0] == 'o' || cte[0] == 'O')
+        cte[0] = '0';
+
+    token_aux.val = atoi(cte);
     // token_aux.val = cte[0] + 0;
 
     atoms = append(atoms, CTENUM_ATOM);
@@ -504,6 +509,10 @@ Token tokenOperadorAsignacion( char* s ) {
     return token_aux;
 }
 
+void rechaza( char* esperado ) {
+
+    printf("Compilador -> ERR: POS: %d, se esperaba %s\n", atoms_i, esperado);
+}
 
 /*Funciones Analizador*/
 /*1*/
@@ -511,12 +520,13 @@ bool Program() {
 
     if (Func()) {
         if (OtraFunc()) {
-            printf("El programa compiló\n\n");
+            printf("Programa compilado\n\n");
             return true;
         }
     }
 
-    printf("Error de parser\n\n");
+    printf("El programa no compiló\n\n");
+    return false;
 }
 
 /*2 - 3*/
@@ -537,44 +547,49 @@ bool Func() {
 
         if (*atoms == 'i') {
             atoms++;
+            atoms_i++;
 
             if (*atoms == '(') {
                 atoms++;
+                atoms_i++;
                 Param();
 
                 if (*atoms == ')') {
                     atoms++;
+                    atoms_i++;
 
                     if (*atoms == '{') {
                         atoms++;
+                        atoms_i++;
                         Cuerpo();
 
                         if (*atoms == '}') {
                             atoms++;
+                            atoms_i++;
                             return true;
 
                         } else {
-                            printf("Error, se esperaba }\n");
+                            rechaza("}");
                         }
 
                     } else {
-                        printf("Error, se esperaba {\n");
+                        rechaza("{");
                     }
 
                 } else {
-                    printf("Error, se esperaba )\n");
+                    rechaza(")");
                 }
 
             } else {
-                printf("Error, se esperaba (\n");
+                rechaza("(");
             }
 
         } else {
-            printf("Error, se esperaba un identificador de la función.\n");
+            rechaza("i");
         }
 
     } else {
-        printf("Se esperaba el tipo de la función.\n");
+        // printf("Se esperaba el tipo de la función.\n");
     }
 
     return false;
@@ -586,11 +601,12 @@ bool Param() {
 
         if (*atoms == 'i') {
             atoms++;
+            atoms_i++;
             OtroParam();
             return true;
 
         } else {
-            printf("Error, se esperaba un identificador.\n");
+            rechaza("i");
         }
     }
 
@@ -603,19 +619,21 @@ bool OtroParam() {
 
     if (*atoms == ',') {
         atoms++;
+        atoms_i++;
 
         if (Tipo()) {
 
             if (*atoms == 'i') {
                 atoms++;
+                atoms_i++;
                 OtroParam();
                 return true;
 
             } else {
-                printf("Error, se esperaba un identificador.\n");
+                rechaza("i");
             }     
         } else {
-            printf("Error, se esperaba el tipo de dato.\n");
+            rechaza(",");
         }
     }
 
@@ -645,14 +663,15 @@ bool Decl() {
 bool D() {
     if (Tipo()) {
         if (K()) {
-            // atoms++;
+            
 
             if (*atoms == ';') {
                 atoms++;
+                atoms_i++;
                 return true;
             
             } else {
-                printf("Error, se esperaba ;\n");
+                rechaza(";");
             }
         }
     }
@@ -670,10 +689,11 @@ bool Tipo() {
         *atoms == 'x' ) {
         
         atoms++;
+        atoms_i++;
         return true;
 
     } else {
-        printf("Error, se esperaba un tipo de dato válido.\n");
+        rechaza("b | g | # | y | x");
     }
 
     return false;
@@ -681,15 +701,16 @@ bool Tipo() {
 
 /*18*/
 bool K() {
-    // atoms++;
+    
 
     if (*atoms == 'i') {
         atoms++;
+        atoms_i++;
         Q();
         return true;
 
     } else {
-        printf("Error, se esperaba un identificador.\n");
+        rechaza("i");
     }
 
     return false;
@@ -697,32 +718,33 @@ bool K() {
 
 /*19 - 21*/
 bool Q() {
-    // atoms++;
+    
 
     if (*atoms == '=') {
         atoms++;
+        atoms_i++;
         if (N()) {
             C();
             return true;
         
-        } else  {
-            printf("Error, se esperaba un valor.\n");
         }
 
     } else if (*atoms == ',') {
         atoms++;
+        atoms_i++;
         if (K()) {
             return true;
         }
 
     } else {
+        rechaza("= | ,");
         return false;
     }
 }
 
 /*22 - 24*/
 bool N() {
-    // atoms++;
+    
 
     if (
         *atoms == 'n' ||
@@ -730,10 +752,11 @@ bool N() {
         *atoms == 's'
     ) {
         atoms++;
+        atoms_i++;
         return true;
 
     } else {
-        printf("Error, se esperaba un valor para el dato.\n");
+        rechaza("n | r | s");
     }
 
     return false;
@@ -741,10 +764,11 @@ bool N() {
 
 /*25 - 26*/
 bool C() {
-    // atoms++;
+    
 
     if (*atoms == ',') {
         atoms++;
+        atoms_i++;
         if (K()) {
             return true;
         }
@@ -757,30 +781,33 @@ bool C() {
 /*Sentencia de Asignacion*/
 /*27*/
 bool A() {
-    // atoms++;
+    
 
     if (*atoms == 'i') {
         atoms++;
+        atoms_i++;
 
         if (*atoms == '=') {
             atoms++;
+            atoms_i++;
             if (AP()) {
-                // atoms++;
+                
 
                 if (*atoms == ';') {
                     atoms++;
+                    atoms_i++;
                     return true;
 
                 } else {
-                    printf("Error, se esperaba un ;\n");
+                    rechaza(";");
                 }
             }
         } else {
-            printf("Error, se esperaba un =\n");
+            rechaza("=");
         }
 
     } else {
-        printf("Error, se esperaba un identificador.\n");
+        rechaza("i");
     }
 
     return false;
@@ -788,17 +815,18 @@ bool A() {
 
 /*28 - 29*/
 bool AP() {
-    // atoms++;
+    
 
     if (*atoms == 's') {
         atoms++;
+        atoms_i++;
         return true;
     
     } else if (E()) {
         return true;
     
     }
-
+    rechaza("s");
     return false;
 }
 
@@ -811,7 +839,7 @@ bool E() {
         return true;
     } else {
 
-        printf("Error, expresión incorrecta.\n");
+        // printf("Error, expresión incorrecta.\n");
     }
 
     return false;
@@ -819,19 +847,20 @@ bool E() {
 
 /*31 - 33*/
 bool EP() {
-    // atoms++;
+    
 
     if (*atoms == '+' ||
         *atoms == '-'
     ) {
         atoms++;
+        atoms_i++;
         if (T()) {
             EP();
             return true;
         }
 
     } else {
-        printf("Error, se esperaba un error aritmético.");
+        rechaza("+ | -");
     }
 
     return false;
@@ -849,7 +878,7 @@ bool T() {
 
 /*35 - 40*/
 bool TP() {
-    // atoms++;
+    
 
     if (*atoms == '*' ||
         *atoms == '/' ||    
@@ -858,32 +887,35 @@ bool TP() {
         *atoms == '^'
     ) {
         atoms++;
+        atoms_i++;
         if (F()) {
             TP();
             return true;
         }
 
     }
-
+    rechaza("* | / | \\ | % | ^");
     return false;
 }
 
 
 /*41 - 44*/
 bool F() {
-    // atoms++;
+    
 
     if (*atoms == '(') {
         atoms++;
+        atoms_i++;
         if (E()) {
-            // atoms++;
+            
 
             if (*atoms == ')') {
                 atoms++;
+                atoms_i++;
                 return true;
             
             } else {
-                printf("Error, se esperaba )\n");
+                rechaza(")");
             }
         }
 
@@ -892,6 +924,7 @@ bool F() {
                *atoms == 'r'
     ) {
         atoms++;
+        atoms_i++;
         return true;
     
     } else {
@@ -900,6 +933,8 @@ bool F() {
         }
     }
 
+    rechaza("( | i | n | r");
+
     return false;
 }
 
@@ -907,10 +942,11 @@ bool F() {
 /*Expresion Relacional*/
 /*46 - 49*/
 bool R() {
-    // atoms++;
+    
     
     if (*atoms == 'i') {
         atoms++;
+        atoms_i++;
         if (RP()) {
             if (V()) {
                 return true;
@@ -920,6 +956,7 @@ bool R() {
     
     else if (*atoms == 'n') {
         atoms++;
+        atoms_i++;
         if (RP()) {
             if (VP()) {
                 return true;
@@ -929,6 +966,7 @@ bool R() {
     
     else if (*atoms == 'r') {
         atoms++;
+        atoms_i++;
         if (RP()) {
             if (VPP()) {
                 return true;
@@ -938,6 +976,7 @@ bool R() {
     
     else if (*atoms == 's') {
         atoms++;
+        atoms_i++;
         if (RP()) {
             if (VPPP()) {
                 return true;
@@ -945,12 +984,14 @@ bool R() {
         }
     }
 
+    rechaza("i | n | r | s");
+
     return false;
 }
 
 /*50 - 55*/
 bool RP() {
-    // atoms++;
+    
 
     if (
         *atoms == '>' ||
@@ -961,15 +1002,17 @@ bool RP() {
         *atoms == 'u'
     ) {
         atoms++;
+        atoms_i++;
         return true;
     }
 
+    rechaza("< | > | l | e | d | u");
     return false;
 }
 
 /*56 - 59*/
 bool V() {
-    // atoms++;
+    
 
     if (
         *atoms == 'i' ||
@@ -978,54 +1021,62 @@ bool V() {
         *atoms == 's'
     ) {
         atoms++;
+        atoms_i++;
         return true;
     }
 
+    rechaza("i | n | r | s");
     return false;
 }
 
 /*60 - 61*/
 bool VP() {
-    // atoms++;
+    
 
     if (
         *atoms == 'i' ||
         *atoms == 'n'
     ) {
         atoms++;
+        atoms_i++;
         return true;
     }
 
+    rechaza("i | n");
     return false;
 }
 
 /*62 - 63*/
 bool VPP() {
-    // atoms++;
+    
 
     if (
         *atoms == 'i' ||
         *atoms == 'r'
     ) {
         atoms++;
+        atoms_i++;
         return true;
     }
 
+    rechaza("i | r");
     return false;
 }
 
 /*64 - 65*/
 bool VPPP() {
-    // atoms++;
+    
 
     if (
         *atoms == 'i' ||
         *atoms == 's'
     ) {
         atoms++;
+        atoms_i++;
         return true;
     }
 
+    rechaza("i | s");
     return false;
 }
 
@@ -1033,7 +1084,7 @@ bool VPPP() {
 /*Proposiciones*/
 /*66 - 73*/
 bool P() {
-    // atoms++;
+    
     if (A()) {
         return true;
 
@@ -1057,17 +1108,16 @@ bool P() {
 
     } else if (*atoms == 'c') {
         atoms++;
+        atoms_i++;
 
         if (*atoms == ';') {
             atoms++;
+            atoms_i++;
             return true;
-
-        } else {
-            printf("Error, se esperaba un ;\n");
-
         }
     }
 
+    rechaza("c | ;");
     return false;
 }
 
@@ -1087,54 +1137,60 @@ bool ListaP() {
 /*Sentencia Loop*/
 /*76*/
 bool W() {
-    // atoms++;
+    
 
     if (*atoms == 'w') {
         atoms++;
+        atoms_i++;
 
         if (*atoms == '(') {
             atoms++;
+            atoms_i++;
 
             if (R()) {
-                // atoms++;
+                
 
                 if (*atoms == ')') {
                     atoms++;
+                    atoms_i++;
 
                     if (*atoms == 'm') {
                         atoms++;
+                        atoms_i++;
 
                         if (*atoms == '{') {
                             atoms++;
+                            atoms_i++;
                             ListaP();
 
                             if (*atoms == '}') {
                                 atoms++;
+                                atoms_i++;
                                 return true; 
 
                             } else {
-                                printf("Error, se esperaba un }\n");
+                                rechaza("}");
                             }
 
                         } else {
-                            printf("Error, se esperaba un {\n");
+                            rechaza("{");
                         }
 
                     } else {
-                        printf("Error, se esperaba un m\n");
+                        rechaza("m");
                     }
 
                 } else {
-                    printf("Error, se esperaba un )\n");
+                    rechaza(")");
                 }
             }
 
         } else {
-            printf("Error, se esperaba un (\n");
+            rechaza("(");
         }
     
     } else {
-        printf("Error, se esperaba un while\n");
+        rechaza("w");
     }
 
     return false;
@@ -1144,45 +1200,49 @@ bool W() {
 /*Sentencia Evaluate*/
 /*77*/
 bool I() {
-    // atoms++;
+    
 
     if (*atoms == 'f') {
         atoms++;
+        atoms_i++;
 
         if (*atoms == '(') {
             atoms++;
+            atoms_i++;
 
             if (R()) {
-                // atoms++;
+                
 
                 if (*atoms == ')') {
                     atoms++;
+                    atoms_i++;
                     ListaP();
 
                     if (IP()) {
-                        // atoms++;
+                        
 
                         if (*atoms == ':') {
                             atoms++;
+                            atoms_i++;
                             return true;
 
                         } else {
-                            printf("Error, se esperaba un :\n");
+                            rechaza(":");
                         }
                     }
 
                 } else {
-                    printf("Error, se esperaba )\n");
+                    rechaza(")");
                 }
             
             }
 
         } else {
-            printf("Error, se esperaba un (\n");
+            rechaza("(");
         }
 
     } else {
-        printf("Error, se esperaba una f\n");
+        rechaza("f");
     }
 
     return false;
@@ -1191,14 +1251,16 @@ bool I() {
 
 /*78 - 79*/
 bool IP() {
-    // atoms++;
+    
 
     if (*atoms == 't') {
         atoms++;
+        atoms_i++;
         ListaP();
         return true;
     }
 
+    rechaza("t");
     return false;
 }
 
@@ -1206,47 +1268,51 @@ bool IP() {
 /*Sentencia Repeat*/
 /*80*/
 bool J() {
-    // atoms++;
+    
 
     if (*atoms == 'j') {
         atoms++;
+        atoms_i++;
 
         if (*atoms == '(') {
             atoms++;
+            atoms_i++;
 
             if (Y()) {
 
                 if (X()) {
 
                     if (Z()) {
-                        // atoms++;
+                        
 
                         if (*atoms == '{') {
                             atoms++;
+                            atoms_i++;
 
                             ListaP();
 
                             if (*atoms == '}') {
                                 atoms++;
+                                atoms_i++;
                                 return true;
 
                             } else {
-                                printf("Error, se esperaba un }\n");
+                                rechaza("}");
                             }
 
                         } else {
-                            printf("Error, se esperaba un {\n");
+                            rechaza("{");
                         }
                     }
                 }
             }
 
         } else {
-            printf("Error, se esperaba un (\n");
+            rechaza("(");
         }
 
     } else {
-        printf("Error, se esperaba un j\n");
+        rechaza("j");
     }
 
     return false;
@@ -1254,32 +1320,38 @@ bool J() {
 
 /*81 - 82*/
 bool Y() {
-    // atoms++; 
+     
 
     if (*atoms == 'i') {
         atoms++;
+        atoms_i++;
 
         if (*atoms == '=') {
             atoms++;
+            atoms_i++;
 
             if (E()) {
 
                 if (*atoms == ';') {
                     atoms++;
+                    atoms_i++;
                     return true;
+                } else {
+                    rechaza(";");
                 }
             }
 
         } else {
-            printf("Error, se esperaba un =\n");
+            rechaza("=");
         }
 
     } else if (*atoms == ';') {
         atoms++;
+        atoms_i++;
         return true;
 
     } else {
-        printf("Error, se esperaba un i o ;\n");
+        rechaza("i | ;");
     }
 
     return false;
@@ -1288,50 +1360,54 @@ bool Y() {
 /*83 - 84*/
 bool X() {
     if (R()) {
-        // atoms++;
-
+        
         if (*atoms == ';') {
             atoms++;
+            atoms_i++;
             return true;
         }
+
     } else if (*atoms == ';') {
         atoms++;
+        atoms_i++;
         return true;
 
-    } else {
-        printf("Error, se esperaba un ;\n");
     }
 
+    rechaza(";");
     return false;
 }
 
 /*85 - 86*/
 bool Z() {
-    // atoms++;
+    
 
     if (*atoms == 'i') {
         atoms++;
+        atoms_i++;
 
         if (*atoms == '=') {
             atoms++;
+            atoms_i++;
 
             if (E()) {
 
                 if (*atoms == ')') {
                     atoms++;
+                    atoms_i++;
                     return true;
                 
                 } else {
-                    printf("Error, se esperaba un )\n");
+                    rechaza(")");
                 }
             }
 
         } else {
-            printf("Error, se esperaba un =\n");
+            rechaza("=");
         }
     
     } else {
-        printf("Error, se esperaba un i\n");
+        rechaza("i");
     }
 
     return false;
@@ -1341,51 +1417,57 @@ bool Z() {
 /*Sentencia Select*/
 /*87*/
 bool H() {
-    // atoms++;
+    
 
     if (*atoms == 'h') {
         atoms++;
+        atoms_i++;
 
         if (*atoms == '(') {
             atoms++;
+            atoms_i++;
 
             if (*atoms == 'i') {
                 atoms++;
+                atoms_i++;
 
                 if (*atoms == ')') {
                     atoms++;
+                    atoms_i++;
 
                     if (*atoms == '{') {
                         atoms++;
+                        atoms_i++;
                         CP();
                         OP();
 
                         if (*atoms == '}') {
                             atoms++;
+                            atoms_i++;
                             return true;
                         
                         } else {
-                            printf("Error, se esperaaba un }\n");
+                            rechaza("}");
                         }
 
                     } else {
-                        printf("Error, se esperaba un {\n");
+                        rechaza("{");
                     }
 
                 } else {
-                    printf("Error, se esperaba un )\n");
+                    rechaza(")");
                 }
 
             } else {
-                printf("Error, se esperaba un i\n");
+                rechaza("i");
             }
 
         } else {
-            printf("Error, se esperaba un (\n");
+            rechaza("(");
         }
 
     } else {
-        printf("Error, se esperaba un h\n");
+        rechaza("h");
     }
 
     return false;
@@ -1393,16 +1475,19 @@ bool H() {
 
 /*88 - 89*/
 bool CP() {
-    // atoms++;
+    
 
     if (*atoms == 'a') {
         atoms++;
+        atoms_i++;
 
         if (*atoms == 'n') {
             atoms++;
+            atoms_i++;
 
             if (*atoms == ':') {
                 atoms++;
+                atoms_i++;
 
                 ListaP();
                 U();
@@ -1410,13 +1495,13 @@ bool CP() {
                 return true;
 
             } else {
-                printf("Error, se esperaba un :\n");
+                rechaza(":");
             }   
         } else {
-            printf("Error, se esperaba una n\n");
+            rechaza("n");
         }
     } else {
-        printf("Error, se esperaba una a\n");
+        rechaza("a");
     }
 
     return false;
@@ -1424,22 +1509,24 @@ bool CP() {
 
 /*90 - 91*/
 bool OP() {
-    // atoms++;
+    
 
     if (*atoms == 'o') {
         atoms++;
+        atoms_i++;
 
         if (*atoms == ':') {
             atoms++;
+            atoms_i++;
 
             ListaP();
             return true;
                
         } else {
-            printf("Error, se esperaba un :\n");
+            rechaza(":");
         }
     } else {
-        printf("Error, se esperaba una o\n");
+        rechaza("o");
     }
 
     return false;
@@ -1447,13 +1534,14 @@ bool OP() {
 
 /*92 - 93*/
 bool U() {
-    // atoms++;
+    
 
     if (*atoms == 'q') {
         atoms++;
+        atoms_i++;
         return true;
     } else {
-        printf("Error, se esperaba un q\n");
+        rechaza("q");
     }
 
     return false;
@@ -1463,36 +1551,40 @@ bool U() {
 /*Sentencia Throw*/
 /*94*/
 bool Devuelve() {
-    // atoms++;
+    
 
     if (*atoms == 'z') {
         atoms++;
+        atoms_i++;
 
         if (*atoms == '(') {
             atoms++;
+            atoms_i++;
             Valor();
 
             if (*atoms == ')') {
                 atoms++;
+                atoms_i++;
 
                 if (*atoms == ';') {
                     atoms++;
+                    atoms_i++;
                     return true;
 
                 } else {
-                    printf("Error, se esperaba un ;\n");
+                    rechaza(";");
                 }
 
             } else {
-                printf("Error, se esperaba un )\n");
+                rechaza(")");
             }
 
         } else {
-            printf("Error, se esperaba un (\n");
+            rechaza("(");
         }
         
     } else {
-        printf("Error, se esperaba un z\n");
+        rechaza("z");
     }
 
     return false;
@@ -1506,44 +1598,49 @@ bool Valor() {
 /*Llama a una funcion*/
 /*97*/
 bool Llama() {
-    // atoms++;
+    
 
     if (*atoms == '[') {
         atoms++;
+        atoms_i++;
 
         if (*atoms == 'i') {
             atoms++;
+            atoms_i++;
 
             if (*atoms == '(') {
                 atoms++;
+                atoms_i++;
                 
                 Arg();
 
                 if (*atoms == ')') {
                     atoms++;
+                    atoms_i++;
 
                     if (*atoms == ']') {
                         atoms++;
+                        atoms_i++;
                         return true;
 
                     } else {
-                        printf("Error, se esperaba un ]\n");
+                        rechaza("]");
                     }
 
                 } else {
-                    printf("Error, se esperaba un )\n");
+                    rechaza(")");
                 }
 
             } else {
-                printf("Error, se esperaba un (\n");    
+                rechaza("(");
             }
 
         } else {
-            printf("Error, se esperaba un identificador\n");
+            rechaza("i");
         }
 
     } else {
-        printf("Error, se esperaba un [\n");
+        rechaza("[");
     }
 
     return false;
@@ -1559,10 +1656,11 @@ bool Arg() {
 
 /*100 - 101*/
 bool otroArg() {
-    // atoms++;
+    
 
     if (*atoms == ',') {
         atoms++;
+        atoms_i++;
 
         V();
         otroArg();
@@ -1570,7 +1668,7 @@ bool otroArg() {
         return true;
 
     } else {
-        printf("Error, se esperaba un ,\n");
+        rechaza(",");
     }
 
     return false;   
