@@ -6,4 +6,34 @@ number $main () {
     $num=$Grande+15*(o12-93);
     $cadVacia= "cadena#2";
     $numReal=27.9;
+
+    loop ($num > 6) make {
+
+    }
+
+    evaluate ( $num > $numReal )
+        $cadVacia= "cadena#3";
+    instead
+        $cadVacia= "cadena#4";
+
+    repeat ($n=6; $n<10; $n=$n+1) {
+        $numReal=27.0;
+    }
+
+    select($num){
+        alternative 1: stop
+        alternative 2:
+            $cadVacia= "cadena#5";
+        other:
+            $numReal=$Grande+1;
+    }
+
+    [$fun($x, 8)]
+
+    throw();
+
+}
+
+number $fun(real $x, number $n) {
+    throw($n);
 }
