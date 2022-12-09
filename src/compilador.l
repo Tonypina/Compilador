@@ -278,11 +278,13 @@ int main (int argc, char *argv[]) {
             SLL_MakeEmpty(TABLA_CTESCADENAS);
 
             fprintf(archSal, "\n-------Lista de Tokens--------\n");
+            fflush(archSal);
 
             yylex();
 
             fprintf(archSal, "\n-------Cadena de Átomos--------\n");
             fprintf(archSal, "%s\n", atoms);
+            fflush(archSal);
 
             Program();
         }
@@ -306,20 +308,32 @@ int main (int argc, char *argv[]) {
 
 /* Imprime las tablas en forma de tuplas ( a, b, c ) */
 void imprimirTablas() {
+
+    fflush(archSal);
+
     fprintf(archSal, "\n-------Tabla de Palabras Reservadas--------\n");
     SLL_Print(TABLA_PALRESERVADAS, archSal);
+    fflush(archSal);
+    
     fprintf(archSal, "\n-------Tabla de Palabras Identificadores--------\n");
     SLL_Print(TABLA_IDENTIFICADORES, archSal);
-    fprintf(archSal, "\n-------Tabla de Constantes Enteras--------\n");
-    SLL_Print(TABLA_CTESNUMERICAS, archSal);
-    fprintf(archSal, "\n-------Tabla de Constantes Reales--------\n");
-    SLL_Print(TABLA_CTESREALES, archSal);
-    fprintf(archSal, "\n-------Tabla de Constantes Cadenas--------\n");
-    SLL_Print(TABLA_CTESCADENAS, archSal);
+    fflush(archSal);
+    
     fprintf(archSal, "\n-------Tabla de Operadores Relacionales--------\n");
     SLL_Print(TABLA_OPRELACIONALES, archSal);
+    fflush(archSal);
+
+    fprintf(archSal, "\n-------Tabla de Constantes Reales--------\n");
+    SLL_Print(TABLA_CTESREALES, archSal);
+    fflush(archSal);
+    
+    fprintf(archSal, "\n-------Tabla de Constantes Cadenas--------\n");
+    SLL_Print(TABLA_CTESCADENAS, archSal);
+    fflush(archSal);
+    
     fprintf(archSal, "\n-------Cadena de Átomos--------\n");
     fprintf(archSal, "%s", atoms);
+    fflush(archSal);
 }
 
 char* append(const char * str, char c)
@@ -955,7 +969,7 @@ bool RP() {
 
 /*56 - 59*/
 bool V() {
-    atoms++;
+    // atoms++;
 
     if (
         *atoms == 'i' ||
@@ -1249,7 +1263,11 @@ bool Y() {
             atoms++;
 
             if (E()) {
-                return true;
+
+                if (*atoms == ';') {
+                    atoms++;
+                    return true;
+                }
             }
 
         } else {
@@ -1328,7 +1346,7 @@ bool H() {
     if (*atoms == 'h') {
         atoms++;
 
-        if (*atoms == ')') {
+        if (*atoms == '(') {
             atoms++;
 
             if (*atoms == 'i') {
